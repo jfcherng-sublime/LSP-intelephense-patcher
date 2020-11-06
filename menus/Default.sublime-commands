@@ -1,0 +1,14 @@
+[
+    {
+        "caption": "patcher-LSP-intelephense: Patch",
+        "command": "patch_lsp_intelephense",
+    },
+    {
+        "caption": "patcher-LSP-intelephense: Un-patch",
+        "command": "unpatch_lsp_intelephense",
+    },
+    {
+        "caption": "patcher-LSP-intelephense: Re-patch",
+        "command": "repatch_lsp_intelephense",
+    },
+]
