@@ -18,3 +18,4 @@ From the command palette:
 - patcher-LSP-intelephense: Patch
 - patcher-LSP-intelephense: Un-patch
 - patcher-LSP-intelephense: Re-patch
+- patcher-LSP-intelephense: Open Server Binary Directory

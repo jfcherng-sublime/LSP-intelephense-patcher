@@ -11,4 +11,8 @@
         "caption": "patcher-LSP-intelephense: Re-patch",
         "command": "repatch_lsp_intelephense",
     },
+    {
+        "caption": "patcher-LSP-intelephense: Open Server Binary Directory",
+        "command": "lsp_intelephense_open_server_binary_dir",
+    },
 ]

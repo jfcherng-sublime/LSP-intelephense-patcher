@@ -80,3 +80,16 @@ class RepatchLspIntelephenseCommand(sublime_plugin.ApplicationCommand):
 
         sublime.run_command(get_class_command_name(UnpatchLspIntelephenseCommand))
         sublime.run_command(get_class_command_name(PatchLspIntelephenseCommand))
+
+
+class LspIntelephenseOpenServerBinaryDirCommand(sublime_plugin.WindowCommand):
+    def run(self) -> None:
+        plugin_module = st_command_precheck()
+
+        if not plugin_module:
+            return None
+
+        lsp_plugin = plugin_module.LspIntelephensePlugin  # type: ignore
+        binary_path = lsp_plugin.binary_path()  # type: str
+
+        self.window.run_command("open_dir", {"dir": os.path.dirname(binary_path)})
