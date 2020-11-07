@@ -67,8 +67,14 @@ class UnpatchLspIntelephenseCommand(sublime_plugin.ApplicationCommand):
         binary_path = lsp_plugin.binary_path()  # type: str
 
         restored_files = Patcher.restore_directory(os.path.dirname(binary_path))
-        for file in restored_files:
-            console_msg("File restored: {}".format(file))
+
+        if restored_files:
+            for idx, file in enumerate(restored_files):
+                console_msg("{}/{} file restored: {}".format(idx + 1, len(restored_files), file))
+
+            info_box("{} files have been restored.".format(len(restored_files)))
+        else:
+            error_box("No file has been restored...")
 
 
 class RepatchLspIntelephenseCommand(sublime_plugin.ApplicationCommand):
