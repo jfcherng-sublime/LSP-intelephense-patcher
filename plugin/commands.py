@@ -4,7 +4,7 @@ import sublime
 import sublime_plugin
 
 from types import ModuleType
-from typing import Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from .functions import console_msg, error_box, info_box, get_class_command_name
 from .patcher import AlreadyPatchedException, Patcher
@@ -27,7 +27,7 @@ def st_command_precheck() -> Optional[ModuleType]:
     return plugin_module
 
 
-class PatchLspIntelephenseCommand(sublime_plugin.ApplicationCommand):
+class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
     def run(self) -> None:
         plugin_module = st_command_precheck()
 
@@ -56,7 +56,7 @@ class PatchLspIntelephenseCommand(sublime_plugin.ApplicationCommand):
             console_msg("Patch info: {}".format(Patcher.json_dumps_better(Patcher.extract_patch_info(binary_path))))
 
 
-class UnpatchLspIntelephenseCommand(sublime_plugin.ApplicationCommand):
+class PatcherLspIntelephenseUnpatchCommand(sublime_plugin.ApplicationCommand):
     def run(self) -> None:
         plugin_module = st_command_precheck()
 
@@ -77,18 +77,18 @@ class UnpatchLspIntelephenseCommand(sublime_plugin.ApplicationCommand):
             error_box("No file has been restored...")
 
 
-class RepatchLspIntelephenseCommand(sublime_plugin.ApplicationCommand):
+class PatcherLspIntelephenseRepatchCommand(sublime_plugin.ApplicationCommand):
     def run(self) -> None:
         plugin_module = st_command_precheck()
 
         if not plugin_module:
             return None
 
-        sublime.run_command(get_class_command_name(UnpatchLspIntelephenseCommand))
-        sublime.run_command(get_class_command_name(PatchLspIntelephenseCommand))
+        sublime.run_command(get_class_command_name(PatcherLspIntelephenseUnpatchCommand))
+        sublime.run_command(get_class_command_name(PatcherLspIntelephensePatchCommand))
 
 
-class LspIntelephenseOpenServerBinaryDirCommand(sublime_plugin.WindowCommand):
+class PatcherLspIntelephenseOpenServerBinaryDirCommand(sublime_plugin.WindowCommand):
     def run(self) -> None:
         plugin_module = st_command_precheck()
 
@@ -99,3 +99,23 @@ class LspIntelephenseOpenServerBinaryDirCommand(sublime_plugin.WindowCommand):
         binary_path = lsp_plugin.binary_path()  # type: str
 
         self.window.run_command("open_dir", {"dir": os.path.dirname(binary_path)})
+
+
+class PatcherLspIntelephenseShowMenuCommand(sublime_plugin.WindowCommand):
+    menu_items = [
+        ("Patch Intelephense", PatcherLspIntelephensePatchCommand, {}),
+        ("Un-patch Intelephense", PatcherLspIntelephenseUnpatchCommand, {}),
+        ("Re-patch Intelephense", PatcherLspIntelephenseRepatchCommand, {}),
+        ("Open Server Binary Directory", PatcherLspIntelephenseOpenServerBinaryDirCommand, {}),
+    ]  # type: List[Tuple[str, type, Dict[str, Any]]]
+
+    def run(self) -> None:
+        titles, cmd_classes, cmd_args = zip(*self.menu_items)
+
+        def on_select(idx: int) -> None:
+            if idx < 0:
+                return None
+
+            self.window.run_command(get_class_command_name(cmd_classes[idx]), cmd_args[idx])  # type: ignore
+
+        self.window.show_quick_panel(titles, on_select=on_select)  # type: ignore

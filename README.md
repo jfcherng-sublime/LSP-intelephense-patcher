@@ -15,7 +15,9 @@ To install this plugin via Package Control, you have to add a custom repository.
 
 From the command palette:
 
-- patcher-LSP-intelephense: Patch
-- patcher-LSP-intelephense: Un-patch
-- patcher-LSP-intelephense: Re-patch
-- patcher-LSP-intelephense: Open Server Binary Directory
+- patcher-LSP-intelephense: Show Menu
+
+  - Patch Intelephense
+  - Un-patch Intelephense
+  - Re-patch Intelephense
+  - Open Server Binary Directory

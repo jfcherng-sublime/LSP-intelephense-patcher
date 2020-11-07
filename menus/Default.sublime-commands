@@ -1,18 +1,6 @@
 [
     {
-        "caption": "patcher-LSP-intelephense: Patch",
-        "command": "patch_lsp_intelephense",
-    },
-    {
-        "caption": "patcher-LSP-intelephense: Un-patch",
-        "command": "unpatch_lsp_intelephense",
-    },
-    {
-        "caption": "patcher-LSP-intelephense: Re-patch",
-        "command": "repatch_lsp_intelephense",
-    },
-    {
-        "caption": "patcher-LSP-intelephense: Open Server Binary Directory",
-        "command": "lsp_intelephense_open_server_binary_dir",
+        "caption": "patcher-LSP-intelephense: Show Menu",
+        "command": "patcher_lsp_intelephense_show_menu",
     },
 ]
