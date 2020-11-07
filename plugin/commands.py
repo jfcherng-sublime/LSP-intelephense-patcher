@@ -4,7 +4,7 @@ import sublime
 import sublime_plugin
 
 from types import ModuleType
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, cast
 
 from .functions import console_msg, error_box, info_box, get_class_command_name
 from .patcher import AlreadyPatchedException, Patcher
@@ -110,12 +110,16 @@ class PatcherLspIntelephenseShowMenuCommand(sublime_plugin.WindowCommand):
     ]  # type: List[Tuple[str, type, Dict[str, Any]]]
 
     def run(self) -> None:
-        titles, cmd_classes, cmd_args = zip(*self.menu_items)
+        titles, cmd_classes, cmd_args = cast(
+            # make stupid type deduction tool happy
+            Tuple[Tuple[str, ...], Tuple[type, ...], Tuple[Dict[str, Any], ...]],
+            zip(*self.menu_items),
+        )
 
         def on_select(idx: int) -> None:
             if idx < 0:
                 return None
 
-            self.window.run_command(get_class_command_name(cmd_classes[idx]), cmd_args[idx])  # type: ignore
+            self.window.run_command(get_class_command_name(cmd_classes[idx]), cmd_args[idx])
 
-        self.window.show_quick_panel(titles, on_select=on_select)  # type: ignore
+        self.window.show_quick_panel(titles, on_select=on_select)
