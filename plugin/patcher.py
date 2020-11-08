@@ -165,7 +165,7 @@ class Patcher:
                     "occurrences": occurrences,
                     "time": datetime.datetime.now().replace(microsecond=0).isoformat(),
                 },
-            )
+            ),
         )
 
     @classmethod
