@@ -65,13 +65,70 @@ def file_set_content(path: str, content: str, **kwargs) -> bool:
         return False
 
 
+class SchemaVersion:
+    def __init__(self, major: int = 0, minor: int = 0, patch: int = 0) -> None:
+        self.v_tuple = (major, minor, patch)
+
+    def __str__(self) -> str:
+        return ".".join(map(str, self.v_tuple))
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
+    def __hash__(self) -> int:
+        return self.v_tuple.__hash__()
+
+    def __lt__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self.v_tuple < other.v_tuple
+
+        if isinstance(other, str):
+            return self < self.from_str(other)
+
+        return False
+
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self.v_tuple == other.v_tuple
+
+        if isinstance(other, str):
+            return self == self.from_str(other)
+
+        return False
+
+    def __ne__(self, other: Any) -> bool:
+        return not self.__eq__(other)
+
+    def __le__(self, other: Any) -> bool:
+        return self.__lt__(other) or self.__eq__(other)
+
+    def __gt__(self, other: Any) -> bool:
+        return not self.__le__(other)
+
+    def __ge__(self, other: Any) -> bool:
+        return not self.__lt__(other)
+
+    @staticmethod
+    def from_str(v_str: str) -> "SchemaVersion":
+        m = re.search(r"(\d+)(?:\.(\d+))?(?:\.(\d+))?", v_str)
+
+        if not m:
+            raise ValueError("The input is not a valid version string...")
+
+        major = int(m.group(1))
+        minor = int(m.group(2) or "0")
+        patch = int(m.group(3) or "0")
+
+        return SchemaVersion(major, minor, patch)
+
+
 class AlreadyPatchedException(Exception):
     def __init__(self, message: str = "") -> None:
         super().__init__(message or '"intelephense" had been patched...')
 
 
 class Patcher:
-    VERSION = "1.1.0"
+    VERSION = SchemaVersion(1, 1, 1)
 
     PATCH_INFO_MARK_PAIR = ("--- PATCH_INFO_BEGIN ---", "--- PATCH_INFO_END ---")
     PATCHED_MARK_DETECTION = "/** FILE HAS BEEN PATCHED **/"
@@ -161,7 +218,7 @@ class Patcher:
             info=json_dumps_better(
                 {
                     "patcher": __file__,
-                    "version": cls.VERSION,
+                    "version": str(cls.VERSION),
                     "occurrences": occurrences,
                     "time": datetime.datetime.now().replace(microsecond=0).isoformat(),
                 },

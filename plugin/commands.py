@@ -49,6 +49,9 @@ class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
         server_resource = check_result[1]
         binary_path = server_resource.binary_path
 
+        is_already_patched = False
+        is_success = False
+
         try:
             is_success, occurrences = Patcher.patch_file(binary_path)
 
@@ -58,14 +61,25 @@ class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
                     "Restart ST to use the premium version.".format(binary_path, occurrences)
                 )
             else:
-                is_success = False
                 error_box("Unfortunately, somehow the patching failed.")
         except AlreadyPatchedException:
+            is_already_patched = True
             is_success = True
-            info_box('"{}" had been already patched...'.format(binary_path))
 
-        if is_success:
-            console_msg("Patch info: {}".format(json_dumps_better(Patcher.extract_patch_info(binary_path))))
+        if not is_success:
+            return None
+
+        patch_info = Patcher.extract_patch_info(binary_path)
+
+        if is_already_patched:
+            msgs = ['"{bin}" had been already patched...\n\n']
+
+            if Patcher.VERSION > patch_info["version"]:
+                msgs.append("But the current patcher ({v_new}) is newer than the patching one ({v_old}).")
+
+            info_box("".join(msgs).strip().format(bin=binary_path, v_old=patch_info["version"], v_new=Patcher.VERSION))
+
+        console_msg("Patch info: {}".format(json_dumps_better(patch_info)))
 
 
 class PatcherLspIntelephenseUnpatchCommand(sublime_plugin.ApplicationCommand):
