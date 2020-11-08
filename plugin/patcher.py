@@ -76,12 +76,14 @@ class Patcher:
     PATCH_INFO_MARK_PAIR = ("--- PATCH_INFO_BEGIN ---", "--- PATCH_INFO_END ---")
     PATCHED_MARK_DETECTION = "/** FILE HAS BEEN PATCHED **/"
 
-    # fmt: off
-    PATCHED_MARK = "\n".join([
-        PATCHED_MARK_DETECTION,
-        "/** " + " {info} ".join(PATCH_INFO_MARK_PAIR) + " **/",
-    ])
-    # fmt: on
+    PATCHED_MARK = "\n".join(
+        [
+            # indicates file has been patched
+            PATCHED_MARK_DETECTION,
+            # patch info
+            "/** " + " {info} ".join(PATCH_INFO_MARK_PAIR) + " **/",
+        ]
+    )
 
     LICENSE_OBJECT = {
         "message": {
