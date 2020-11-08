@@ -32,6 +32,10 @@ def st_command_precheck() -> Optional[Tuple[ModuleType, ServerNpmResource]]:
         error_box("LSP-intelephense does not seem to be usable...")
         return None
 
+    if not os.path.isfile(server_resource.binary_path):
+        error_box("The intelephense server has not installed yet... Open a PHP project to make it installed.")
+        return None
+
     return (plugin_module, server_resource)
 
 
