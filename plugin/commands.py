@@ -7,7 +7,7 @@ from types import ModuleType
 from typing import Any, Dict, List, Optional, Tuple, cast
 
 from .functions import console_msg, error_box, info_box, get_class_command_name
-from .patcher import AlreadyPatchedException, Patcher
+from .patcher import AlreadyPatchedException, Patcher, restore_directory, json_dumps_better
 
 
 def st_command_precheck() -> Optional[ModuleType]:
@@ -53,7 +53,7 @@ class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
             info_box('"{}" had been already patched...'.format(binary_path))
 
         if is_success:
-            console_msg("Patch info: {}".format(Patcher.json_dumps_better(Patcher.extract_patch_info(binary_path))))
+            console_msg("Patch info: {}".format(json_dumps_better(Patcher.extract_patch_info(binary_path))))
 
 
 class PatcherLspIntelephenseUnpatchCommand(sublime_plugin.ApplicationCommand):
@@ -66,13 +66,15 @@ class PatcherLspIntelephenseUnpatchCommand(sublime_plugin.ApplicationCommand):
         lsp_plugin = plugin_module.LspIntelephensePlugin  # type: ignore
         binary_path = lsp_plugin.binary_path()  # type: str
 
-        restored_files = Patcher.restore_directory(os.path.dirname(binary_path))
+        restored_files = restore_directory(os.path.dirname(binary_path))
 
         if restored_files:
-            for idx, file in enumerate(restored_files):
-                console_msg("{}/{} file restored: {}".format(idx + 1, len(restored_files), file))
+            restored_files_len = len(restored_files)
 
-            info_box("{} files have been restored.".format(len(restored_files)))
+            for idx, file in enumerate(restored_files):
+                console_msg("{}/{} file restored: {}".format(idx + 1, restored_files_len, file))
+
+            info_box("{} files have been restored.".format(restored_files_len))
         else:
             error_box("No file has been restored...")
 
