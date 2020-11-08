@@ -17,7 +17,7 @@ def st_command_precheck() -> Optional[Tuple[ModuleType, ServerNpmResource]]:
         plugin_module = importlib.import_module("LSP-intelephense.plugin")
         lsp_plugin = plugin_module.LspIntelephensePlugin  # type: ignore
     except (ImportError, AttributeError):
-        error_box('"LSP-intelephense" is not installed...')
+        error_box("LSP-intelephense is not installed...")
         return None
 
     server_resource = get_server_npm_resource_for_package(
@@ -26,10 +26,10 @@ def st_command_precheck() -> Optional[Tuple[ModuleType, ServerNpmResource]]:
         lsp_plugin.server_binary_path,
         lsp_plugin.package_storage(),
         lsp_plugin.minimum_node_version(),
-    )
+    )  # type: Optional[ServerNpmResource]
 
     if not server_resource:
-        error_box('"LSP-intelephense" does not seem to be usable...')
+        error_box("LSP-intelephense does not seem to be usable...")
         return None
 
     return (plugin_module, server_resource)
