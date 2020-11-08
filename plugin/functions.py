@@ -1,6 +1,8 @@
 import re
 import sublime
 
+from typing import Union
+
 
 def pluginfy_msg(msg: str) -> str:
     PACKAGE_NAME = __package__.partition(".")[0]
@@ -24,8 +26,9 @@ def error_box(msg: str) -> None:
     sublime.error_message(pluginfy_msg(msg))
 
 
-def get_class_command_name(cls: type) -> str:
-    name = cls.__name__
+def get_command_name(var: Union[type, str]) -> str:
+    name = var.__name__ if isinstance(var, type) else str(var)
+
     name = re.sub(r"Command$", "", name)
     name = re.sub(r"([A-Z])", r"_\1", name)
     name = re.sub(r"_{2,}", "_", name)
