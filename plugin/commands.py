@@ -43,7 +43,7 @@ class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
             if is_success and occurrences > 0:
                 info_box(
                     '"{}" is patched with {} occurrences!\n\n'
-                    "Restart ST to make it premium.".format(binary_path, occurrences)
+                    "Restart ST to use the premium version.".format(binary_path, occurrences)
                 )
             else:
                 is_success = False
