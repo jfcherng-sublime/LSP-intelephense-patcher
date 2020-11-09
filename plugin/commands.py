@@ -33,7 +33,11 @@ def st_command_precheck() -> Optional[Tuple[ModuleType, ServerNpmResource]]:
         return None
 
     if not os.path.isfile(server_resource.binary_path):
-        error_box("The intelephense server has not installed yet... Open a PHP project to make it installed.")
+        error_box(
+            # ...
+            "The intelephense server has not been installed yet... "
+            "Open a PHP project to install it and then retry."
+        )
         return None
 
     return (plugin_module, server_resource)

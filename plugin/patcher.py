@@ -78,39 +78,39 @@ class SchemaVersion:
     def __hash__(self) -> int:
         return self.v_tuple.__hash__()
 
-    def __lt__(self, other: Any) -> bool:
+    def __lt__(self, other: object) -> bool:
         if isinstance(other, self.__class__):
             return self.v_tuple < other.v_tuple
 
         if isinstance(other, str):
             return self < self.from_str(other)
 
-        return False
+        raise ValueError("SchemaVersion can only be compared with itself or str.")
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, self.__class__):
             return self.v_tuple == other.v_tuple
 
         if isinstance(other, str):
             return self == self.from_str(other)
 
-        return False
+        raise ValueError("SchemaVersion can only be compared with itself or str.")
 
-    def __ne__(self, other: Any) -> bool:
+    def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
 
-    def __le__(self, other: Any) -> bool:
+    def __le__(self, other: object) -> bool:
         return self.__lt__(other) or self.__eq__(other)
 
-    def __gt__(self, other: Any) -> bool:
+    def __gt__(self, other: object) -> bool:
         return not self.__le__(other)
 
-    def __ge__(self, other: Any) -> bool:
+    def __ge__(self, other: object) -> bool:
         return not self.__lt__(other)
 
     @staticmethod
     def from_str(v_str: str) -> "SchemaVersion":
-        m = re.search(r"(\d+)(?:\.(\d+))?(?:\.(\d+))?", v_str)
+        m = re.search(r"^(\d+)(?:\.(\d+))?(?:\.(\d+))?", v_str.strip())
 
         if not m:
             raise ValueError("The input is not a valid version string...")
