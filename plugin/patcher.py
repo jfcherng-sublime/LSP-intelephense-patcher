@@ -9,6 +9,10 @@ import shutil
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
 
+def now_isoformat() -> str:
+    return datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat()
+
+
 def backup_files(files: Iterable[str], force_overwrite: bool = False) -> List[str]:
     ok_files = []
 
@@ -218,7 +222,7 @@ class Patcher:
                     "patcher": __file__,
                     "version": str(cls.VERSION),
                     "occurrences": occurrences,
-                    "time": datetime.datetime.now().replace(microsecond=0).isoformat(),
+                    "time": now_isoformat(),
                 },
             ),
         )
