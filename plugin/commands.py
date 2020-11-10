@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Tuple, cast
 from lsp_utils.server_npm_resource import ServerNpmResource, get_server_npm_resource_for_package
 
 from .functions import console_msg, error_box, info_box, get_command_name
-from .patcher import AlreadyPatchedException, Patcher, restore_directory, json_dumps_better
+from .patcher import AlreadyPatchedException, Patcher, restore_directory, json_dumps
 
 
 def st_command_precheck() -> Optional[Tuple[ModuleType, ServerNpmResource]]:
@@ -82,7 +82,7 @@ class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
 
             info_box("".join(msgs).strip().format(bin=binary_path, v_old=patch_info["version"], v_new=Patcher.VERSION))
 
-        console_msg("Patch info: {}".format(json_dumps_better(patch_info)))
+        console_msg("Patch info: {}".format(json_dumps(patch_info)))
 
 
 class PatcherLspIntelephenseUnpatchCommand(sublime_plugin.ApplicationCommand):

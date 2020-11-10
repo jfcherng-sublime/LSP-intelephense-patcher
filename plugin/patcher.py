@@ -1,11 +1,12 @@
 import datetime
 import io
 import json
+import operator
 import os
 import re
 import shutil
 
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
 
 def backup_files(files: Iterable[str], force_overwrite: bool = False) -> List[str]:
@@ -44,7 +45,7 @@ def restore_directory(path: str) -> List[str]:
     return ok_files
 
 
-def json_dumps_better(value: Any, **kwargs) -> str:
+def json_dumps(value: Any, **kwargs) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, **kwargs)
 
 
@@ -69,44 +70,41 @@ class SchemaVersion:
     def __init__(self, major: int = 0, minor: int = 0, patch: int = 0) -> None:
         self.v_tuple = (major, minor, patch)
 
-    def __str__(self) -> str:
-        return ".".join(map(str, self.v_tuple))
+    def __hash__(self) -> int:
+        return self.v_tuple.__hash__()
 
     def __repr__(self) -> str:
         return self.__str__()
 
-    def __hash__(self) -> int:
-        return self.v_tuple.__hash__()
-
-    def __lt__(self, other: object) -> bool:
-        if isinstance(other, self.__class__):
-            return self.v_tuple < other.v_tuple
-
-        if isinstance(other, str):
-            return self < self.from_str(other)
-
-        raise ValueError("SchemaVersion can only be compared with itself or str.")
+    def __str__(self) -> str:
+        return ".".join(map(str, self.v_tuple))
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, self.__class__):
-            return self.v_tuple == other.v_tuple
-
-        if isinstance(other, str):
-            return self == self.from_str(other)
-
-        raise ValueError("SchemaVersion can only be compared with itself or str.")
-
-    def __ne__(self, other: object) -> bool:
-        return not self.__eq__(other)
-
-    def __le__(self, other: object) -> bool:
-        return self.__lt__(other) or self.__eq__(other)
-
-    def __gt__(self, other: object) -> bool:
-        return not self.__le__(other)
+        return self._compare_2(other, operator.eq)
 
     def __ge__(self, other: object) -> bool:
-        return not self.__lt__(other)
+        return self._compare_2(other, operator.ge)
+
+    def __gt__(self, other: object) -> bool:
+        return self._compare_2(other, operator.gt)
+
+    def __le__(self, other: object) -> bool:
+        return self._compare_2(other, operator.le)
+
+    def __lt__(self, other: object) -> bool:
+        return self._compare_2(other, operator.lt)
+
+    def __ne__(self, other: object) -> bool:
+        return self._compare_2(other, operator.ne)
+
+    def _compare_2(self, other: object, comparator: Callable[[object, object], bool]) -> bool:
+        if isinstance(other, self.__class__):
+            return comparator(self.v_tuple, other.v_tuple)
+
+        if isinstance(other, str):
+            return comparator(self, self.from_str(other))
+
+        raise ValueError("SchemaVersion can only be compared with itself or str.")
 
     @staticmethod
     def from_str(v_str: str) -> "SchemaVersion":
@@ -187,7 +185,7 @@ class Patcher:
 
     @classmethod
     def get_patch_patterns(cls) -> List[Tuple[str, str, int, int]]:
-        LICENSE_OBJECT_JS = json_dumps_better(cls.LICENSE_OBJECT)
+        LICENSE_OBJECT_JS = json_dumps(cls.LICENSE_OBJECT)
 
         return [
             # force convert licenceKey into a non-empty string even if it is undefined
@@ -215,7 +213,7 @@ class Patcher:
     @classmethod
     def generate_patch_marker(cls, occurrences: int = 0) -> str:
         return cls.PATCHED_MARK.format(
-            info=json_dumps_better(
+            info=json_dumps(
                 {
                     "patcher": __file__,
                     "version": str(cls.VERSION),
