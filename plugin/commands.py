@@ -8,8 +8,9 @@ from typing import Any, Dict, List, Optional, Tuple, cast
 
 from lsp_utils.server_npm_resource import ServerNpmResource, get_server_npm_resource_for_package
 
-from .functions import console_msg, error_box, info_box, get_command_name
 from .patcher import AlreadyPatchedException, Patcher, restore_directory, json_dumps
+from .plugin_message import console_msg, error_box, info_box
+from .utils import get_command_name
 
 
 def st_command_precheck() -> Optional[Tuple[ModuleType, ServerNpmResource]]:
@@ -17,7 +18,7 @@ def st_command_precheck() -> Optional[Tuple[ModuleType, ServerNpmResource]]:
         plugin_module = importlib.import_module("LSP-intelephense.plugin")
         lsp_plugin = plugin_module.LspIntelephensePlugin  # type: ignore
     except (ImportError, AttributeError):
-        error_box("LSP-intelephense is not installed...")
+        error_box("[{_}] LSP-intelephense is not installed...")
         return None
 
     server_resource = get_server_npm_resource_for_package(
@@ -29,12 +30,12 @@ def st_command_precheck() -> Optional[Tuple[ModuleType, ServerNpmResource]]:
     )  # type: Optional[ServerNpmResource]
 
     if not server_resource:
-        error_box("LSP-intelephense does not seem to be usable...")
+        error_box("[{_}] LSP-intelephense does not seem to be usable...")
         return None
 
     if not os.path.isfile(server_resource.binary_path):
         error_box(
-            # ...
+            "[{_}] "
             "The intelephense server has not been installed yet... "
             "Open a PHP project to install it and then retry."
         )
@@ -60,11 +61,12 @@ class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
 
             if is_success and occurrences > 0:
                 info_box(
-                    '"{}" is patched with {} occurrences!\n\n'
-                    "Restart ST to use the premium version.".format(binary_path, occurrences)
+                    '[{_}] "{}" is patched with {} occurrences!\n\nRestart ST to use the premium version.',
+                    binary_path,
+                    occurrences,
                 )
             else:
-                error_box("Unfortunately, somehow the patching failed.")
+                error_box("[{_}] Unfortunately, somehow the patching failed.")
         except AlreadyPatchedException:
             is_already_patched = True
             is_success = True
@@ -75,14 +77,14 @@ class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
         patch_info = Patcher.extract_patch_info(binary_path)
 
         if is_already_patched:
-            msgs = ['"{bin}" had been already patched...\n\n']
+            msg = '[{_}] "{bin}" had been already patched...'
 
             if Patcher.VERSION > patch_info["version"]:
-                msgs.append("But the current patcher ({v_new}) is newer than the patching one ({v_old}).")
+                msg += "\n\nBut the current patcher ({v_new}) is newer than the patching one ({v_old})."
 
-            info_box("".join(msgs).strip().format(bin=binary_path, v_old=patch_info["version"], v_new=Patcher.VERSION))
+            info_box(msg, bin=binary_path, v_old=patch_info["version"], v_new=Patcher.VERSION)
 
-        console_msg("Patch info: {}".format(json_dumps(patch_info)))
+        console_msg("[{_}] Patch info: {}", json_dumps(patch_info))
 
 
 class PatcherLspIntelephenseUnpatchCommand(sublime_plugin.ApplicationCommand):
@@ -100,11 +102,11 @@ class PatcherLspIntelephenseUnpatchCommand(sublime_plugin.ApplicationCommand):
             restored_files_len = len(restored_files)
 
             for idx, file in enumerate(restored_files):
-                console_msg("{}/{} file restored: {}".format(idx + 1, restored_files_len, file))
+                console_msg("[{_}] {}/{} file restored: {}", idx + 1, restored_files_len, file)
 
-            info_box("{} files have been restored.".format(restored_files_len))
+            info_box("[{_}] {} files have been restored.", restored_files_len)
         else:
-            error_box("No file has been restored...")
+            error_box("[{_}] No file has been restored...")
 
 
 class PatcherLspIntelephenseRepatchCommand(sublime_plugin.ApplicationCommand):
