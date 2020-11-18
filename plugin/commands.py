@@ -1,20 +1,17 @@
+from .patcher import AlreadyPatchedException, Patcher, restore_directory, json_dumps
+from .plugin_message import console_msg, error_box, info_box
+from .utils import get_command_name
+from lsp_utils.server_npm_resource import ServerNpmResource, get_server_npm_resource_for_package
+from types import ModuleType
+from typing import Any, Callable, Dict, List, Optional, Tuple, cast
 import importlib
 import os
 import sublime
 import sublime_plugin
 
-from types import ModuleType
-from typing import Any, Callable, Dict, List, Optional, Tuple, cast
 
-from lsp_utils.server_npm_resource import ServerNpmResource, get_server_npm_resource_for_package
-
-from .patcher import AlreadyPatchedException, Patcher, restore_directory, json_dumps
-from .plugin_message import console_msg, error_box, info_box
-from .utils import get_command_name
-
-
-def st_command_run_precheck(func: Callable):
-    def wrap(self, *args, **kwargs) -> None:
+def st_command_run_precheck(func: Callable) -> Callable:
+    def wrap(self: sublime_plugin.Command, *args, **kwargs) -> None:
         def checker() -> Tuple[ModuleType, ServerNpmResource]:
             try:
                 plugin_module = importlib.import_module("LSP-intelephense.plugin")
@@ -44,7 +41,7 @@ def st_command_run_precheck(func: Callable):
         try:
             _, server_resource = checker()
         except Exception as e:
-            return error_box("[{_}] " + str(e))
+            return error_box("[{_}] {}", e)
 
         return func(self, server_resource, *args, **kwargs)
 
