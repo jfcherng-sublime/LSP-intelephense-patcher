@@ -128,6 +128,16 @@ class AlreadyPatchedException(Exception):
         super().__init__(message or '"intelephense" had been patched...')
 
 
+class PatchPattern:
+    __slots__ = ("search", "replace", "flags", "count")
+
+    def __init__(self, search: str = "", replace: str = "", flags: int = re.UNICODE, count: int = 0) -> None:
+        self.search = search
+        self.replace = replace
+        self.flags = flags
+        self.count = count  # max count of replacement occurrences, 0 = unlimited
+
+
 class Patcher:
     VERSION = SchemaVersion(1, 1, 1)
 
@@ -177,8 +187,8 @@ class Patcher:
             raise AlreadyPatchedException()
 
         occurrences = 0
-        for search, replace, flags, count in cls.get_patch_patterns():
-            content, occurrence = re.subn(search, replace, content, max(0, count), flags)
+        for ptn in cls.get_patch_patterns():
+            content, occurrence = re.subn(ptn.search, ptn.replace, content, max(0, ptn.count), ptn.flags)
             occurrences += occurrence
 
         return (
@@ -187,30 +197,35 @@ class Patcher:
         )
 
     @classmethod
-    def get_patch_patterns(cls) -> List[Tuple[str, str, int, int]]:
+    def get_patch_patterns(cls) -> List[PatchPattern]:
         LICENSE_OBJECT_JS = json_dumps(cls.LICENSE_OBJECT)
 
         return [
             # force convert licenceKey into a non-empty string even if it is undefined
-            (r"(\.initializationOptions\.licenceKey)(?![;)\]}])", r"\1 + 'FOO_BAR'", re.UNICODE, 0),
-            (r"(\.initializationOptions\.licenceKey)(?=[;)\]}])", r"\1 = 'FOO_BAR'", re.UNICODE, 0),
+            PatchPattern(
+                r"(\.initializationOptions\.licenceKey)(?![;)\]}])",
+                r"\1 + 'FOO_BAR'",
+            ),
+            PatchPattern(
+                r"(\.initializationOptions\.licenceKey)(?=[;)\]}])",
+                r"\1 = 'FOO_BAR'",
+            ),
             # license always active
-            (
+            PatchPattern(
                 # patch the setter of "activationResult"
                 r"\b(activationResult\([^)]*\)\s*\{)",
                 r"\1return this._activationResult = " + LICENSE_OBJECT_JS + ";",
-                re.UNICODE,
-                0,
             ),
-            (
+            PatchPattern(
                 # this one is just used to trigger the setter of "activationResult"
                 r"\b(readActivationResultFromCache\([^)]*\)\s*\{)",
                 r"\1return this.activationResult = {};",
-                re.UNICODE,
-                0,
             ),
             # nullify potential telemetry
-            (r"\b(intelephense\.com)", r"localhost", re.UNICODE, 0),
+            PatchPattern(
+                r"\b(intelephense\.com)",
+                r"localhost",
+            ),
         ]
 
     @classmethod
