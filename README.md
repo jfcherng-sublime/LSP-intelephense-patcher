@@ -1,6 +1,6 @@
 # ST-patcher-LSP-intelephense
 
-`intelephense` premium only costs \$3 USD and it's life-time license.
+It only costs \$10 USD to get a life-time license for `intelephense` premium.
 
 ## Intelephense Premium Features
 
