@@ -1,4 +1,4 @@
-from .patcher import AlreadyPatchedException, Patcher, restore_directory, json_dumps
+from .patcher import AlreadyPatchedException, Patcher, PatcherUnsupportedException, restore_directory, json_dumps
 from .plugin_message import console_msg, error_box, info_box
 from .utils import get_command_name
 from lsp_utils.server_npm_resource import ServerNpmResource, get_server_npm_resource_for_package
@@ -50,14 +50,14 @@ def st_command_run_precheck(func: Callable) -> Callable:
 
 class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
     @st_command_run_precheck
-    def run(self, server_resource: ServerNpmResource) -> None:
+    def run(self, server_resource: ServerNpmResource, allow_unsupported: bool = False) -> None:
         binary_path = server_resource.binary_path
 
         is_already_patched = False
         is_success = False
 
         try:
-            is_success, occurrences = Patcher.patch_file(binary_path)
+            is_success, occurrences = Patcher.patch_file(binary_path, allow_unsupported)
 
             if is_success and occurrences > 0:
                 info_box(
@@ -70,6 +70,9 @@ class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
         except AlreadyPatchedException:
             is_already_patched = True
             is_success = True
+        except PatcherUnsupportedException as e:
+            is_success = False
+            error_box("[{_}] {}", e)
 
         if not is_success:
             return None
@@ -123,6 +126,7 @@ class PatcherLspIntelephenseOpenServerBinaryDirCommand(sublime_plugin.WindowComm
 class PatcherLspIntelephenseShowMenuCommand(sublime_plugin.WindowCommand):
     menu_items = [
         ("Patch Intelephense", PatcherLspIntelephensePatchCommand, {}),
+        ("Patch Intelephense (Allow Unsupported)", PatcherLspIntelephensePatchCommand, {"allow_unsupported": True}),
         ("Un-patch Intelephense", PatcherLspIntelephenseUnpatchCommand, {}),
         ("Re-patch Intelephense", PatcherLspIntelephenseRepatchCommand, {}),
         ("Open Server Binary Directory", PatcherLspIntelephenseOpenServerBinaryDirCommand, {}),

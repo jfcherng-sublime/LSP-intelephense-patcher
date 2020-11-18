@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
 import datetime
 import io
 import json
@@ -124,8 +124,23 @@ class SchemaVersion:
 
 
 class AlreadyPatchedException(Exception):
-    def __init__(self, message: str = "") -> None:
-        super().__init__(message or '"intelephense" had been patched...')
+    def __init__(self) -> None:
+        super().__init__('"intelephense" had been patched...')
+
+
+class PatcherUnsupportedException(Exception):
+    def __init__(
+        self,
+        version: Union[str, SchemaVersion],
+        supported_versions: Iterable[Union[str, SchemaVersion]] = [],
+    ) -> None:
+        msg = '"intelephense" v{} is probably unsupported (or untested) by the patcher...'.format(version)
+
+        v_versions = ["v" + str(v) for v in supported_versions]
+        if v_versions:
+            msg += " The patcher supports {}".format(", ".join(v_versions))
+
+        super().__init__(msg)
 
 
 class PatchPattern:
@@ -140,6 +155,8 @@ class PatchPattern:
 
 class Patcher:
     VERSION = SchemaVersion(1, 1, 1)
+
+    SUPPORTED_BINARY_VERSIONS = ("1.5.4",)
 
     PATCH_INFO_MARK_PAIR = ("--- PATCH_INFO_BEGIN ---", "--- PATCH_INFO_END ---")
     PATCHED_MARK_DETECTION = "/** FILE HAS BEEN PATCHED **/"
@@ -165,14 +182,14 @@ class Patcher:
     }
 
     @classmethod
-    def patch_file(cls, path: str) -> Tuple[bool, int]:
+    def patch_file(cls, path: str, allow_unsupported: bool = False) -> Tuple[bool, int]:
         if not path or not os.path.isfile(path):
             return (False, 0)
 
         backup_files([path])
 
         content = file_get_content(path) or ""
-        content, occurrences = cls.patch_str(content)
+        content, occurrences = cls.patch_str(content, allow_unsupported)
 
         if occurrences == 0:
             return (False, 0)
@@ -182,9 +199,13 @@ class Patcher:
         return (is_success, occurrences)
 
     @classmethod
-    def patch_str(cls, content: str) -> Tuple[str, int]:
+    def patch_str(cls, content: str, allow_unsupported: bool = False) -> Tuple[str, int]:
         if content.rfind(cls.PATCHED_MARK_DETECTION) > -1:
             raise AlreadyPatchedException()
+
+        version = cls.extract_intelephense_version(content)
+        if not allow_unsupported and version not in cls.SUPPORTED_BINARY_VERSIONS:
+            raise PatcherUnsupportedException(version, cls.SUPPORTED_BINARY_VERSIONS)
 
         occurrences = 0
         for ptn in cls.get_patch_patterns():
@@ -252,3 +273,10 @@ class Patcher:
         region[0] += len(cls.PATCH_INFO_MARK_PAIR[0])
 
         return json.loads(content[slice(*region)].strip())
+
+    @classmethod
+    def extract_intelephense_version(cls, path_or_content: str) -> "SchemaVersion":
+        content = file_get_content(path_or_content) or path_or_content
+        m = re.search(r'\bVERSION=["\'](\d+(?:\.\d+)?(?:\.\d+)?)', content)
+
+        return SchemaVersion.from_str(m.group(1)) if m else SchemaVersion(0, 0, 0)
