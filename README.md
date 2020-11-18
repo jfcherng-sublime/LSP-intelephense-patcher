@@ -40,6 +40,7 @@ Then, you can patch the `intelephense` server from the command palette:
 - patcher-LSP-intelephense: Show Menu
 
   - Patch Intelephense
+  - Patch Intelephense (Allow Unsupported)
   - Un-patch Intelephense
   - Re-patch Intelephense (`Un-patch` and then `Patch`)
   - Open Server Binary Directory
