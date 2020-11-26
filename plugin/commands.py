@@ -10,6 +10,10 @@ import sublime
 import sublime_plugin
 
 
+def restart_intelephense_server() -> None:
+    sublime.active_window().run_command("lsp_restart_client")
+
+
 def st_command_run_precheck(func: Callable) -> Callable:
     def wrap(self: sublime_plugin.Command, *args, **kwargs) -> None:
         def checker() -> Tuple[ModuleType, ServerNpmResource]:
@@ -50,7 +54,12 @@ def st_command_run_precheck(func: Callable) -> Callable:
 
 class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
     @st_command_run_precheck
-    def run(self, server_resource: ServerNpmResource, allow_unsupported: bool = False) -> None:
+    def run(
+        self,
+        server_resource: ServerNpmResource,
+        allow_unsupported: bool = False,
+        is_direct: bool = True,
+    ) -> None:
         binary_path = server_resource.binary_path
 
         is_already_patched = False
@@ -60,11 +69,7 @@ class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
             is_success, occurrences = Patcher.patch_file(binary_path, allow_unsupported)
 
             if is_success and occurrences > 0:
-                info_box(
-                    '[{_}] "{}" is patched with {} occurrences!\n\nRestart ST to use the premium version.',
-                    binary_path,
-                    occurrences,
-                )
+                info_box('[{_}] "{}" is patched with {} occurrences!', binary_path, occurrences)
             else:
                 error_box("[{_}] Unfortunately, somehow the patching failed.")
         except AlreadyPatchedException:
@@ -87,32 +92,43 @@ class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
 
             info_box(msg, bin=binary_path, v_old=patch_info["version"], v_new=Patcher.VERSION)
 
+        if is_direct:
+            restart_intelephense_server()
+
         console_msg("[{_}] Patch info: {}", json_dumps(patch_info))
 
 
 class PatcherLspIntelephenseUnpatchCommand(sublime_plugin.ApplicationCommand):
     @st_command_run_precheck
-    def run(self, server_resource: ServerNpmResource) -> None:
+    def run(
+        self,
+        server_resource: ServerNpmResource,
+        is_direct: bool = True,
+    ) -> None:
         binary_path = server_resource.binary_path
 
         restored_files = restore_directory(os.path.dirname(binary_path))
 
-        if restored_files:
-            restored_files_len = len(restored_files)
+        if not restored_files:
+            return error_box("[{_}] No file has been restored...")
 
-            for idx, file in enumerate(restored_files):
-                console_msg("[{_}] {}/{} file restored: {}", idx + 1, restored_files_len, file)
+        restored_files_len = len(restored_files)
 
-            info_box("[{_}] {} files have been restored.", restored_files_len)
-        else:
-            error_box("[{_}] No file has been restored...")
+        for idx, file in enumerate(restored_files):
+            console_msg("[{_}] {}/{} file restored: {}", idx + 1, restored_files_len, file)
+
+        if is_direct:
+            restart_intelephense_server()
+
+        info_box("[{_}] {} files have been restored.", restored_files_len)
 
 
 class PatcherLspIntelephenseRepatchCommand(sublime_plugin.ApplicationCommand):
     @st_command_run_precheck
     def run(self, server_resource: ServerNpmResource) -> None:
-        sublime.run_command(get_command_name(PatcherLspIntelephenseUnpatchCommand))
-        sublime.run_command(get_command_name(PatcherLspIntelephensePatchCommand))
+        sublime.run_command(get_command_name(PatcherLspIntelephenseUnpatchCommand), {"is_direct": False})
+        sublime.run_command(get_command_name(PatcherLspIntelephensePatchCommand), {"is_direct": False})
+        restart_intelephense_server()
 
 
 class PatcherLspIntelephenseOpenServerBinaryDirCommand(sublime_plugin.WindowCommand):
