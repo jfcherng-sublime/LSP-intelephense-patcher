@@ -1,7 +1,13 @@
-from .patcher import AlreadyPatchedException, Patcher, PatcherUnsupportedException, restore_directory, json_dumps
-from .plugin_message import console_msg, error_box, info_box
+from .patcher import AlreadyPatchedException
+from .patcher import json_dumps
+from .patcher import Patcher
+from .patcher import PatcherUnsupportedException
+from .patcher import restore_directory
+from .plugin_message import console_msg
+from .plugin_message import error_box
+from .plugin_message import info_box
 from .utils import get_command_name
-from lsp_utils.server_npm_resource import ServerNpmResource, get_server_npm_resource_for_package
+from lsp_utils.server_npm_resource import ServerNpmResource
 from types import ModuleType
 from typing import Any, Callable, Dict, List, Optional, Tuple, cast
 import importlib
@@ -23,12 +29,14 @@ def st_command_run_precheck(func: Callable) -> Callable:
             except (ImportError, AttributeError):
                 raise RuntimeError("LSP-intelephense is not installed...")
 
-            server_resource = get_server_npm_resource_for_package(
-                lsp_plugin.package_name,
-                lsp_plugin.server_directory,
-                lsp_plugin.server_binary_path,
-                lsp_plugin.package_storage(),
-                lsp_plugin.minimum_node_version(),
+            server_resource = ServerNpmResource.create(
+                {
+                    "package_name": lsp_plugin.package_name,
+                    "server_directory": lsp_plugin.server_directory,
+                    "server_binary_path": lsp_plugin.server_binary_path,
+                    "package_storage": lsp_plugin.package_storage(),
+                    "minimum_node_version": lsp_plugin.minimum_node_version(),
+                }
             )  # type: Optional[ServerNpmResource]
 
             if not server_resource:
