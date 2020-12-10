@@ -1,6 +1,6 @@
 # This file is maintained on https://github.com/jfcherng-sublime/ST-API-stubs
 #
-# ST version: 4093
+# ST version: 4094
 
 from typing import (
     Any,
@@ -499,7 +499,7 @@ def save_settings(base_name: str) -> None:
     ...
 
 
-def set_timeout(f: StCallback0, timeout_ms: int = 0) -> None:
+def set_timeout(f: StCallback0, timeout_ms: float = 0) -> None:
     """
     Schedules a function to be called in the future. Sublime Text will block
     while the function is running
@@ -507,7 +507,7 @@ def set_timeout(f: StCallback0, timeout_ms: int = 0) -> None:
     ...
 
 
-def set_timeout_async(f: StCallback0, timeout_ms: int = 0) -> None:
+def set_timeout_async(f: StCallback0, timeout_ms: float = 0) -> None:
     """
     Schedules a function to be called in the future. The function will be
     called in a worker thread, and Sublime Text will not block while the
