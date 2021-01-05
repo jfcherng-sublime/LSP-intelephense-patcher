@@ -156,7 +156,12 @@ class PatchPattern:
 class Patcher:
     VERSION = SchemaVersion(1, 1, 1)
 
-    SUPPORTED_BINARY_VERSIONS = ("1.6.0", "1.5.4")
+    # fmt: off
+    SUPPORTED_BINARY_VERSIONS = (
+        "1.5.0", "1.5.1", "1.5.2", "1.5.3", "1.5.4",
+        "1.6.0", "1.6.1",
+    )
+    # fmt: on
 
     PATCH_INFO_MARK_PAIR = ("--- PATCH_INFO_BEGIN ---", "--- PATCH_INFO_END ---")
     PATCHED_MARK_DETECTION = "/** FILE HAS BEEN PATCHED **/"
