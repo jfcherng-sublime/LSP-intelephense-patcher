@@ -158,8 +158,8 @@ class Patcher:
 
     # fmt: off
     SUPPORTED_BINARY_VERSIONS = (
-        "1.5.0", "1.5.1", "1.5.2", "1.5.3", "1.5.4",
-        "1.6.0", "1.6.1", "1.6.2", "1.6.3",
+        r"^1\\.5\\..*$",
+        r"^1\\.6\\..*$",
     )
     # fmt: on
 
@@ -208,8 +208,8 @@ class Patcher:
         if content.rfind(cls.PATCHED_MARK_DETECTION) > -1:
             raise AlreadyPatchedException()
 
-        version = cls.extract_intelephense_version(content)
-        if not allow_unsupported and version not in cls.SUPPORTED_BINARY_VERSIONS:
+        version = str(cls.extract_intelephense_version(content))
+        if not allow_unsupported and cls.is_version_supported(version):
             raise PatcherUnsupportedException(version, cls.SUPPORTED_BINARY_VERSIONS)
 
         occurrences = 0
@@ -285,3 +285,7 @@ class Patcher:
         m = re.search(r'\bVERSION=["\'](\d+(?:\.\d+)?(?:\.\d+)?)', content)
 
         return SchemaVersion.from_str(m.group(1)) if m else SchemaVersion(0, 0, 0)
+
+    @classmethod
+    def is_version_supported(cls, v: str) -> bool:
+        return any(re.match(version, v) for version in cls.SUPPORTED_BINARY_VERSIONS)
