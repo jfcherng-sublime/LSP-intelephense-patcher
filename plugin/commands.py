@@ -36,6 +36,7 @@ def st_command_run_precheck(func: Callable) -> Callable:
                     "server_binary_path": lsp_plugin.server_binary_path,
                     "package_storage": lsp_plugin.package_storage(),
                     "minimum_node_version": lsp_plugin.minimum_node_version(),
+                    "storage_path": lsp_plugin.storage_path(),
                 }
             )  # type: Optional[ServerNpmResource]
 
