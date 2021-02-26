@@ -45,7 +45,7 @@ def st_command_run_precheck(func: Callable) -> Callable:
             if not os.path.isfile(server_resource.binary_path):
                 raise RuntimeError(
                     "The intelephense server has not been installed yet... "
-                    "Open a PHP project to install it and then retry."
+                    + "Open a PHP project to install it and then retry."
                 )
 
             return (plugin_module, server_resource)
