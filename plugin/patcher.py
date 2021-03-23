@@ -160,6 +160,7 @@ class Patcher:
     SUPPORTED_BINARY_VERSIONS = (
         r"^1\\.5\\..*$",
         r"^1\\.6\\..*$",
+        r"^1\\.7\\..*$",
     )
     # fmt: on
 
