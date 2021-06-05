@@ -7,9 +7,9 @@ from .plugin_message import console_msg
 from .plugin_message import error_box
 from .plugin_message import info_box
 from .utils import get_command_name
-from lsp_utils.server_npm_resource import ServerNpmResource
+from lsp_utils import ServerNpmResource
 from types import ModuleType
-from typing import Any, Callable, Dict, List, Optional, Tuple, cast
+from typing import Any, Callable, Dict, List, Tuple, cast
 import importlib
 import os
 import sublime
@@ -38,7 +38,7 @@ def st_command_run_precheck(func: Callable) -> Callable:
                     "minimum_node_version": lsp_plugin.minimum_node_version(),
                     "storage_path": lsp_plugin.storage_path(),
                 }
-            )  # type: Optional[ServerNpmResource]
+            )
 
             if not server_resource:
                 raise RuntimeError("LSP-intelephense does not seem to be usable...")
@@ -143,13 +143,12 @@ class PatcherLspIntelephenseRepatchCommand(sublime_plugin.ApplicationCommand):
 class PatcherLspIntelephenseOpenServerBinaryDirCommand(sublime_plugin.WindowCommand):
     @st_command_run_precheck
     def run(self, server_resource: ServerNpmResource) -> None:
-        binary_path = server_resource.binary_path
-
-        self.window.run_command("open_dir", {"dir": os.path.dirname(binary_path)})
+        self.window.run_command("open_dir", {"dir": os.path.dirname(server_resource.binary_path)})
 
 
 class PatcherLspIntelephenseShowMenuCommand(sublime_plugin.WindowCommand):
     menu_items = [
+        # title, cmd_class, cmd_arg
         ("Patch Intelephense", PatcherLspIntelephensePatchCommand, {}),
         ("Patch Intelephense (Allow Unsupported)", PatcherLspIntelephensePatchCommand, {"allow_unsupported": True}),
         ("Un-patch Intelephense", PatcherLspIntelephenseUnpatchCommand, {}),
