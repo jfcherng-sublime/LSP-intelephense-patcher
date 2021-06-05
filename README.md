@@ -37,10 +37,12 @@ After installation, to use this plugin, you need to have following things instal
 
 Then, you can patch the `intelephense` server from the command palette:
 
-- patcher-LSP-intelephense: Show Menu
+- `patcher-LSP-intelephense: Show Menu`
 
-  - Patch Intelephense
-  - Patch Intelephense (Allow Unsupported)
-  - Un-patch Intelephense
-  - Re-patch Intelephense (`Un-patch` and then `Patch`)
-  - Open Server Binary Directory
+  - `Patch Intelephense` (usually you want to do this)
+  - `Patch Intelephense (Allow Unsupported)` (we don't claim the server version supported but you want to give it a try)
+  - `Un-patch Intelephense` (restore the patched server back to un-patched)
+  - `Re-patch Intelephense` (i.e., `Un-patch` and then `Patch`)
+  - `Open Server Binary Directory`
+
+You will have to patch the server again if the server gets updated.
