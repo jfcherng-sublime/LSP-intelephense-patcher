@@ -89,7 +89,7 @@ class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
             error_box("[{_}] {}", e)
 
         if not is_success:
-            return None
+            return
 
         patch_info = Patcher.extract_patch_info(binary_path)
 
@@ -165,7 +165,7 @@ class PatcherLspIntelephenseShowMenuCommand(sublime_plugin.WindowCommand):
 
         def on_select(idx: int) -> None:
             if idx < 0:
-                return None
+                return
 
             self.window.run_command(get_command_name(cmd_classes[idx]), cmd_args[idx])
 
