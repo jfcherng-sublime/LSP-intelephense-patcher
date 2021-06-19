@@ -17,7 +17,9 @@ import sublime_plugin
 
 
 def restart_intelephense_server() -> None:
-    sublime.active_window().run_command("lsp_restart_client")
+    view = sublime.active_window().active_view()
+    if view:
+        view.run_command("lsp_restart_server", {"config_name": "LSP-intelephense"})
 
 
 def st_command_run_precheck(func: Callable) -> Callable:
