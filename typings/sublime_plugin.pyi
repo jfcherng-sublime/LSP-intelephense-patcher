@@ -1,6 +1,6 @@
 # This file is maintained on https://github.com/jfcherng-sublime/ST-API-stubs
 #
-# ST version: 4100
+# ST version: 4107
 
 from importlib.machinery import ModuleSpec
 from types import ModuleType
@@ -23,7 +23,7 @@ from typing import (
 )
 from typing_extensions import TypedDict
 
-import importlib
+import importlib.abc
 import io
 import os
 import threading
@@ -47,9 +47,9 @@ T_Layout = TypedDict(
 
 InputType = TypeVar("InputType")
 
-StCallback0 = Callable[[], None]
-StCallback1 = Callable[[T], None]
-StCompletion = Union[str, List[str], Tuple[str, str], sublime.CompletionItem]
+StCallback0 = Callable[[], Any]
+StCallback1 = Callable[[T], Any]
+StCompletion = Union[str, Sequence[str], Tuple[str, str], sublime.CompletionItem]
 StCompletionNormalized = Tuple[
     str,  # trigger
     str,  # annotation
@@ -62,11 +62,12 @@ StCompletionNormalized = Tuple[
     int,  # kind
 ]
 StCompletionKind = Tuple[int, str, str]
+StDip = float
 StLocation = Tuple[str, str, Tuple[int, int]]
 StPoint = int
 StStr = str  # alias in case we have a variable named as "str"
-StValue = Union[dict, list, str, int, float, bool, None]
-StVector = Tuple[float, float]
+StValue = Union[dict, list, tuple, str, int, float, bool, None]
+StVector = Tuple[StDip, StDip]
 
 # -------- #
 # ST codes #
@@ -255,15 +256,15 @@ def notify_application_commands() -> None:
     ...
 
 
-def create_application_commands() -> List[Tuple[T, str]]:
+def create_application_commands() -> List[Tuple[object, str]]:
     ...
 
 
-def create_window_commands(window_id: int) -> List[Tuple[T, str]]:
+def create_window_commands(window_id: int) -> List[Tuple[object, str]]:
     ...
 
 
-def create_text_commands(view_id: int) -> List[Tuple[T, str]]:
+def create_text_commands(view_id: int) -> List[Tuple[object, str]]:
     ...
 
 
@@ -275,7 +276,7 @@ def is_view_event_listener_applicable(cls: Any, view: sublime.View) -> bool:
     ...
 
 
-def create_view_event_listeners(classes: Iterable[T], view: sublime.View) -> None:
+def create_view_event_listeners(classes: Iterable[object], view: sublime.View) -> None:
     ...
 
 
@@ -298,7 +299,7 @@ def detach_view(view: sublime.View) -> None:
     ...
 
 
-def find_view_event_listener(view: sublime.View, cls: str) -> Optional[T]:
+def find_view_event_listener(view: sublime.View, cls: str) -> Optional[object]:
     ...
 
 
@@ -314,7 +315,7 @@ def detach_buffer(buf: sublime.Buffer) -> None:
     ...
 
 
-def plugin_module_for_obj(obj: T) -> str:
+def plugin_module_for_obj(obj: object) -> str:
     ...
 
 
@@ -322,20 +323,24 @@ def el_callbacks(name: str, listener_only: bool = False) -> Generator[Union[type
     ...
 
 
-def vel_callbacks(v: sublime.View, name: str, listener_only: bool = False) -> Generator[Union[type, str], None, None]:
+def vel_callbacks(
+    v: sublime.View,
+    name: str,
+    listener_only: bool = False,
+) -> Generator[Union[type, str], None, None]:
     ...
 
 
 def run_view_callbacks(
     name: str,
     view_id: int,
-    *args: StValue,
+    *args: Any,
     el_only: bool = False,
 ) -> None:
     ...
 
 
-def run_window_callbacks(name: str, window_id: int, *args: StValue) -> None:
+def run_window_callbacks(name: str, window_id: int, *args: Any) -> None:
     ...
 
 
@@ -500,11 +505,17 @@ def on_deactivated_async(view_id: int) -> None:
     ...
 
 
-def on_query_context(view_id: int, key: str, operator: str, operand: StValue, match_all: bool) -> Optional[bool]:
+def on_query_context(
+    view_id: int,
+    key: str,
+    operator: str,
+    operand: Any,
+    match_all: bool,
+) -> Optional[bool]:
     ...
 
 
-def normalise_completion(c: Union[sublime.CompletionItem, str, List[str]]) -> StCompletionNormalized:
+def normalise_completion(c: Union[sublime.CompletionItem, str, Sequence[str]]) -> StCompletionNormalized:
     ...
 
 
@@ -520,14 +531,17 @@ class MultiCompletionList:
 
     def completions_ready(
         self,
-        completions: Iterable[Union[sublime.CompletionItem, str, List[str]]],
+        completions: Iterable[Union[sublime.CompletionItem, str, Sequence[str]]],
         flags: int,
     ) -> None:
         ...
 
 
 def on_query_completions(
-    view_id: int, req_id: int, prefix: str, locations: List[StPoint]
+    view_id: int,
+    req_id: int,
+    prefix: str,
+    locations: Sequence[StPoint],
 ) -> Union[None, List[StCompletion], Tuple[List[StCompletion], int]]:
     ...
 
@@ -608,7 +622,7 @@ class CommandInputHandler(Generic[InputType]):
         """
         ...
 
-    def next_input(self, args: Dict) -> Optional["CommandInputHandler"]:
+    def next_input(self, args: Dict) -> Optional[CommandInputHandler]:
         """
         Returns the next input after the user has completed this one.
         May return None to indicate no more input is required,
@@ -662,7 +676,7 @@ class CommandInputHandler(Generic[InputType]):
         """Called when the input is accepted, after the user has pressed enter and the text has been validated."""
         ...
 
-    def create_input_handler_(self, args: Dict) -> Optional["CommandInputHandler"]:
+    def create_input_handler_(self, args: Dict) -> Optional[CommandInputHandler]:
         ...
 
     def preview_(self, v: str) -> Tuple[str, int]:
@@ -979,7 +993,10 @@ class MultizipImporter(importlib.abc.MetaPathFinder):
         ...
 
     def find_spec(
-        self, fullname: str, path: Optional[Sequence[Union[bytes, str]]], target: Optional[Any] = None
+        self,
+        fullname: str,
+        path: Optional[Sequence[Union[bytes, str]]],
+        target: Optional[Any] = None,
     ) -> Optional[ModuleSpec]:
         """
         :param fullname:
@@ -1003,10 +1020,10 @@ class ZipResourceReader(importlib.abc.ResourceReader):
     Implements the resource reader interface introduced in Python 3.7
     """
 
-    loader: "ZipLoader"
+    loader: ZipLoader
     fullname: str
 
-    def __init__(self, loader: "ZipLoader", fullname: str) -> None:
+    def __init__(self, loader: ZipLoader, fullname: str) -> None:
         """
         :param loader:
             The source ZipLoader() object
