@@ -39,6 +39,7 @@ def st_command_run_precheck(func: Callable) -> Callable:
                     "package_storage": lsp_plugin.package_storage(),
                     "minimum_node_version": lsp_plugin.minimum_node_version(),
                     "storage_path": lsp_plugin.storage_path(),
+                    "skip_npm_install": lsp_plugin.skip_npm_install,
                 }
             )
 
