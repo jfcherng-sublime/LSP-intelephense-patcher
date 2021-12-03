@@ -31,20 +31,7 @@ def st_command_run_precheck(func: Callable) -> Callable:
             except (ImportError, AttributeError):
                 raise RuntimeError("LSP-intelephense is not installed...")
 
-            server_resource = ServerNpmResource.create(
-                {
-                    "package_name": lsp_plugin.package_name,
-                    "server_directory": lsp_plugin.server_directory,
-                    "server_binary_path": lsp_plugin.server_binary_path,
-                    "package_storage": lsp_plugin.package_storage(),
-                    "minimum_node_version": lsp_plugin.minimum_node_version(),
-                    "storage_path": lsp_plugin.storage_path(),
-                    "skip_npm_install": lsp_plugin.skip_npm_install,
-                }
-            )
-
-            if not server_resource:
-                raise RuntimeError("LSP-intelephense does not seem to be usable...")
+            server_resource = lsp_plugin.get_server()  # type: ServerNpmResource
 
             if not os.path.isfile(server_resource.binary_path):
                 raise RuntimeError(
