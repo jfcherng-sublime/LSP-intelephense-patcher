@@ -160,6 +160,7 @@ class Patcher:
         r"^1\\.5\\..*$",
         r"^1\\.6\\..*$",
         r"^1\\.7\\..*$",
+        r"^1\\.8\\..*$",
     )
 
     PATCH_INFO_MARK_PAIR = ("--- PATCH_INFO_BEGIN ---", "--- PATCH_INFO_END ---")
