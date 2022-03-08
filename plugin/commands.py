@@ -23,7 +23,7 @@ def restart_intelephense_server() -> None:
 
 
 def st_command_run_precheck(func: Callable) -> Callable:
-    def wrap(self: sublime_plugin.Command, *args, **kwargs) -> None:
+    def wrapped(self: sublime_plugin.Command, *args, **kwargs) -> None:
         def checker() -> Tuple[ModuleType, ServerNpmResource]:
             try:
                 plugin_module = importlib.import_module("LSP-intelephense.plugin")
@@ -48,7 +48,7 @@ def st_command_run_precheck(func: Callable) -> Callable:
 
         return func(self, server_resource, *args, **kwargs)
 
-    return wrap
+    return wrapped
 
 
 class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
