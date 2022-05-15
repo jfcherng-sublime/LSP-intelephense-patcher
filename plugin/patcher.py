@@ -82,25 +82,25 @@ class SchemaVersion:
     def __str__(self) -> str:
         return ".".join(map(str, self.v_tuple))
 
-    def __eq__(self, other: object) -> bool:
+    def __eq__(self, other: Any) -> bool:
         return self._compare_2(other, operator.eq)
 
-    def __ge__(self, other: object) -> bool:
+    def __ge__(self, other: Any) -> bool:
         return self._compare_2(other, operator.ge)
 
-    def __gt__(self, other: object) -> bool:
+    def __gt__(self, other: Any) -> bool:
         return self._compare_2(other, operator.gt)
 
-    def __le__(self, other: object) -> bool:
+    def __le__(self, other: Any) -> bool:
         return self._compare_2(other, operator.le)
 
-    def __lt__(self, other: object) -> bool:
+    def __lt__(self, other: Any) -> bool:
         return self._compare_2(other, operator.lt)
 
-    def __ne__(self, other: object) -> bool:
+    def __ne__(self, other: Any) -> bool:
         return self._compare_2(other, operator.ne)
 
-    def _compare_2(self, other: object, comparator: Callable[[object, object], bool]) -> bool:
+    def _compare_2(self, other: Any, comparator: Callable[[Any, Any], bool]) -> bool:
         if isinstance(other, self.__class__):
             return comparator(self.v_tuple, other.v_tuple)
 
