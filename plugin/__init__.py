@@ -1,9 +1,11 @@
 # import all listeners and commands
-from .commands import PatcherLspIntelephenseOpenServerBinaryDirCommand
-from .commands import PatcherLspIntelephensePatchCommand
-from .commands import PatcherLspIntelephenseRepatchCommand
-from .commands import PatcherLspIntelephenseShowMenuCommand
-from .commands import PatcherLspIntelephenseUnpatchCommand
+from .commands import (
+    PatcherLspIntelephenseOpenServerBinaryDirCommand,
+    PatcherLspIntelephensePatchCommand,
+    PatcherLspIntelephenseRepatchCommand,
+    PatcherLspIntelephenseShowMenuCommand,
+    PatcherLspIntelephenseUnpatchCommand,
+)
 
 __all__ = (
     # ST: core

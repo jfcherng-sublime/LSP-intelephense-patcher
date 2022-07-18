@@ -1,19 +1,15 @@
-from .patcher import AlreadyPatchedException
-from .patcher import json_dumps
-from .patcher import Patcher
-from .patcher import PatcherUnsupportedException
-from .patcher import restore_directory
-from .plugin_message import console_msg
-from .plugin_message import error_box
-from .plugin_message import info_box
-from .utils import get_command_name
-from lsp_utils import ServerNpmResource
-from types import ModuleType
-from typing import Any, Callable, Dict, List, Tuple, cast
 import importlib
 import os
+from types import ModuleType
+from typing import Any, Callable, Dict, List, Tuple, cast
+
 import sublime
 import sublime_plugin
+from lsp_utils import ServerNpmResource
+
+from .patcher import AlreadyPatchedException, Patcher, PatcherUnsupportedException, json_dumps, restore_directory
+from .plugin_message import console_msg, error_box, info_box
+from .utils import get_command_name
 
 
 def restart_intelephense_server() -> None:

@@ -1,4 +1,3 @@
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
 import datetime
 import io
 import json
@@ -6,6 +5,7 @@ import operator
 import os
 import re
 import shutil
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
 
 
 def now_isoformat() -> str:
