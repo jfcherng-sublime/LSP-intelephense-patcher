@@ -1,5 +1,5 @@
 # This file is maintained on https://github.com/jfcherng-sublime/ST-API-stubs
-# ST version: 4131
+# ST version: 4136
 
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ from typing import (
 )
 
 import sublime
-from _sublime_typing import AnyCallable, Completion, CompletionNormalized, EventDict, Point, T_AnyCallable
+from _sublime_types import AnyCallable, Completion, CompletionNormalized, EventDict, Point, T_AnyCallable
 
 # ----- #
 # types #
@@ -700,9 +700,10 @@ class ListInputHandler(CommandInputHandler[T_InputType], Generic[T_InputType]):
 
     def list_items(
         self,
-    ) -> List[str | Tuple[str, T_InputType] | sublime.ListInputItem[T_InputType]] | Tuple[
-        List[str | Tuple[str, T_InputType] | sublime.ListInputItem[T_InputType]], int
-    ]:
+    ) -> (
+        List[str | Tuple[str, T_InputType] | sublime.ListInputItem[T_InputType]]
+        | Tuple[List[str | Tuple[str, T_InputType] | sublime.ListInputItem[T_InputType]], int]
+    ):
         """
         The items to show in the list. If returning a list of `(str, value)` tuples,
         then the str will be shown to the user, while the value will be used as the command argument.

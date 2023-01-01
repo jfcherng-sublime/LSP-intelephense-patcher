@@ -1,5 +1,5 @@
 # This file is maintained on https://github.com/jfcherng-sublime/ST-API-stubs
-# ST version: 4131
+# ST version: 4136
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ from typing import (
     TypeVar,
 )
 
-from _sublime_typing import (
+from _sublime_types import (
     Callback0,
     Callback1,
     CommandArgsDict,
@@ -613,6 +613,24 @@ def get_macro() -> List[CommandArgsDict]:
     ...
 
 
+def project_history() -> List[str]:
+    """
+    Returns paths of recently opened `.sublime-project` / `.sublime-workspace` files.
+
+    @version ST(>=4145)
+    """
+    ...
+
+
+def folder_history() -> List[str]:
+    """
+    Returns paths of recently opened folders.
+
+    @version ST(>=4145)
+    """
+    ...
+
+
 class Window:
     """This class represents windows and provides an interface of methods to interact with them."""
 
@@ -847,6 +865,10 @@ class Window:
 
     def transient_view_in_group(self, group: int) -> None | View:
         """Returns the transient `View` in the given `group` if any."""
+        ...
+
+    def promote_sheet(self, sheet: Sheet) -> None:
+        """Promote the `sheet` parameter if semi-transient or transient."""
         ...
 
     def layout(self) -> Layout:
@@ -2453,7 +2475,6 @@ class Buffer:
 
 
 class Settings:
-
     settings_id: int
 
     def __init__(self, id: int) -> None:
