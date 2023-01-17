@@ -1,10 +1,10 @@
-# ST-patcher-LSP-intelephense
+# ST-LSP-intelephense-patcher
 
 It only costs \$10 USD to get a life-time license for `intelephense` premium.
 
 ## Intelephense Premium Features
 
-![Features](https://raw.githubusercontent.com/jfcherng-sublime/ST-patcher-LSP-intelephense/master/docs/features.png)
+![Premium features](https://raw.githubusercontent.com/jfcherng-sublime/ST-LSP-intelephense-patcher/master/docs/premium-features.png)
 
 See https://intelephense.com/
 
@@ -25,7 +25,7 @@ To install this plugin via Package Control, you have to add a custom repository.
 1. Execute `Package Control: Add Repository` in the command palette.
 1. Add this custom repository: `https://raw.githubusercontent.com/jfcherng-sublime/ST-my-package-control/master/repository.json`
 1. Restart Sublime Text.
-1. You should be able to install this package with Package Control with the name `patcher-LSP-intelephense`.
+1. You should be able to install this package with Package Control with the name `LSP-intelephense-patcher`.
 
 ## Usage
 
@@ -37,7 +37,7 @@ After installation, to use this plugin, you need to have following things instal
 
 Then, you can patch the `intelephense` server from the command palette:
 
-- `patcher-LSP-intelephense: Show Menu`
+- `LSP-intelephense-patcher: Show Menu`
 
   - `Patch Intelephense` (usually you want to do this)
   - `Patch Intelephense (Allow Unsupported)` (we don't claim the server version supported but you want to give it a try)

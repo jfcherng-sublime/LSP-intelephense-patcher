@@ -1,6 +1,6 @@
 [
     {
-        "caption": "patcher-LSP-intelephense: Show Menu",
-        "command": "patcher_lsp_intelephense_show_menu",
+        "caption": "LSP-intelephense-patcher: Show Menu",
+        "command": "lsp_intelephense_patcher_show_menu",
     },
 ]

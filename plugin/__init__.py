@@ -1,10 +1,10 @@
 # import all listeners and commands
 from .commands import (
-    PatcherLspIntelephenseOpenServerBinaryDirCommand,
-    PatcherLspIntelephensePatchCommand,
-    PatcherLspIntelephenseRepatchCommand,
-    PatcherLspIntelephenseShowMenuCommand,
-    PatcherLspIntelephenseUnpatchCommand,
+    LspIntelephensePatcherOpenServerBinaryDirCommand,
+    LspIntelephensePatcherPatchCommand,
+    LspIntelephensePatcherRepatchCommand,
+    LspIntelephensePatcherShowMenuCommand,
+    LspIntelephensePatcherUnpatchCommand,
 )
 
 __all__ = (
@@ -12,11 +12,11 @@ __all__ = (
     "plugin_loaded",
     "plugin_unloaded",
     # ST: commands
-    "PatcherLspIntelephenseOpenServerBinaryDirCommand",
-    "PatcherLspIntelephensePatchCommand",
-    "PatcherLspIntelephenseRepatchCommand",
-    "PatcherLspIntelephenseShowMenuCommand",
-    "PatcherLspIntelephenseUnpatchCommand",
+    "LspIntelephensePatcherOpenServerBinaryDirCommand",
+    "LspIntelephensePatcherPatchCommand",
+    "LspIntelephensePatcherRepatchCommand",
+    "LspIntelephensePatcherShowMenuCommand",
+    "LspIntelephensePatcherUnpatchCommand",
 )
 
 

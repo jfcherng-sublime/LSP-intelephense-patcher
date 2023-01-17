@@ -35,7 +35,7 @@ def st_command_run_precheck(func: Callable) -> Callable:
                     + "Open a PHP project to install it and then retry."
                 )
 
-            return (plugin_module, server_resource)
+            return plugin_module, server_resource
 
         try:
             _, server_resource = checker()
@@ -47,7 +47,7 @@ def st_command_run_precheck(func: Callable) -> Callable:
     return wrapped
 
 
-class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
+class LspIntelephensePatcherPatchCommand(sublime_plugin.ApplicationCommand):
     @st_command_run_precheck
     def run(
         self,
@@ -93,7 +93,7 @@ class PatcherLspIntelephensePatchCommand(sublime_plugin.ApplicationCommand):
         console_msg("[{_}] Patch info: {}", json_dumps(patch_info))
 
 
-class PatcherLspIntelephenseUnpatchCommand(sublime_plugin.ApplicationCommand):
+class LspIntelephensePatcherUnpatchCommand(sublime_plugin.ApplicationCommand):
     @st_command_run_precheck
     def run(
         self,
@@ -118,28 +118,28 @@ class PatcherLspIntelephenseUnpatchCommand(sublime_plugin.ApplicationCommand):
         info_box("[{_}] {} files have been restored.", restored_files_len)
 
 
-class PatcherLspIntelephenseRepatchCommand(sublime_plugin.ApplicationCommand):
+class LspIntelephensePatcherRepatchCommand(sublime_plugin.ApplicationCommand):
     @st_command_run_precheck
     def run(self, server_resource: ServerNpmResource) -> None:
-        sublime.run_command(get_command_name(PatcherLspIntelephenseUnpatchCommand), {"is_direct": False})
-        sublime.run_command(get_command_name(PatcherLspIntelephensePatchCommand), {"is_direct": False})
+        sublime.run_command(get_command_name(LspIntelephensePatcherUnpatchCommand), {"is_direct": False})
+        sublime.run_command(get_command_name(LspIntelephensePatcherPatchCommand), {"is_direct": False})
         restart_intelephense_server()
 
 
-class PatcherLspIntelephenseOpenServerBinaryDirCommand(sublime_plugin.WindowCommand):
+class LspIntelephensePatcherOpenServerBinaryDirCommand(sublime_plugin.WindowCommand):
     @st_command_run_precheck
     def run(self, server_resource: ServerNpmResource) -> None:
         self.window.run_command("open_dir", {"dir": os.path.dirname(server_resource.binary_path)})
 
 
-class PatcherLspIntelephenseShowMenuCommand(sublime_plugin.WindowCommand):
+class LspIntelephensePatcherShowMenuCommand(sublime_plugin.WindowCommand):
     menu_items = [
         # title, cmd_class, cmd_arg
-        ("Patch Intelephense", PatcherLspIntelephensePatchCommand, {}),
-        ("Patch Intelephense (Allow Unsupported)", PatcherLspIntelephensePatchCommand, {"allow_unsupported": True}),
-        ("Un-patch Intelephense", PatcherLspIntelephenseUnpatchCommand, {}),
-        ("Re-patch Intelephense", PatcherLspIntelephenseRepatchCommand, {}),
-        ("Open Server Binary Directory", PatcherLspIntelephenseOpenServerBinaryDirCommand, {}),
+        ("Patch Intelephense", LspIntelephensePatcherPatchCommand, {}),
+        ("Patch Intelephense (Allow Unsupported)", LspIntelephensePatcherPatchCommand, {"allow_unsupported": True}),
+        ("Un-patch Intelephense", LspIntelephensePatcherUnpatchCommand, {}),
+        ("Re-patch Intelephense", LspIntelephensePatcherRepatchCommand, {}),
+        ("Open Server Binary Directory", LspIntelephensePatcherOpenServerBinaryDirCommand, {}),
     ]  # type: List[Tuple[str, type, Dict[str, Any]]]
 
     def run(self) -> None:
