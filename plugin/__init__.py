@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 # import all listeners and commands
 from .commands import (
     LspIntelephensePatcherOpenServerBinaryDirCommand,

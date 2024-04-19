@@ -3,6 +3,7 @@
 check_untyped_defs = true
 strict_optional = true
 mypy_path = 'typings:stubs'
+python_version = '3.8'
 
 [[tool.mypy.overrides]]
 module = [
@@ -11,39 +12,6 @@ module = [
 ]
 ignore_errors = true
 ignore_missing_imports = true
-
-[tool.isort]
-line_length = 120
-profile = 'black'
-py_version=38
-skip_glob = [
-  ".venv/**",
-  "br-*/**",
-  "branch-*/**",
-  "libs/**",
-  "plugin/libs/**",
-  "stubs/**",
-  "typings/**",
-  "vendor/**",
-  "venv/**",
-]
-
-[tool.black]
-line-length = 120
-target-version = ['py33']
-exclude = '''
-/(
-  \.git
-  | \.?venv
-  | \.mypy_cache
-  | br-*
-  | branch-*
-  | libs
-  | stubs
-  | tests/files
-  | typings
-)/
-'''
 
 [tool.pyright]
 include = ['./']
@@ -61,3 +29,26 @@ ignore = [
 ]
 stubPath = 'typings'
 pythonVersion = '3.8'
+
+[tool.ruff]
+preview = true
+line-length = 120
+target-version = 'py38'
+exclude = [
+  "*/libs/*",
+  ".git",
+  ".mypy_cache",
+  ".venv",
+  ".venv-*",
+  "branch-*",
+  "stubs",
+  "tests/files",
+  "typings",
+  "vendor",
+  "venv",
+  "venv-*",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP"]
+ignore = ["E203"]

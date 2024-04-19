@@ -1,8 +1,11 @@
+from __future__ import annotations
+
 import sublime
 
 
 def pluginfy_msg(msg: str, *args, **kwargs) -> str:
-    package_name = __package__.split(".")[0]
+    assert __package__
+    package_name = __package__.partition(".")[0]
 
     return msg.format(*args, _=package_name, **kwargs)
 

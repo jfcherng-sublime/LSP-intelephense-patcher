@@ -168,31 +168,25 @@ COMPLETION_FORMAT_COMMAND: int = 2
 
 COMPLETION_FLAG_KEEP_PREFIX: int = 1
 
-
 def version() -> str:
     """Returns the version number."""
     ...
-
 
 def platform() -> Literal["osx", "linux", "windows"]:
     """Returns the platform, which may be `"osx"`, `"linux"` or `"windows"`."""
     ...
 
-
 def arch() -> Literal["x32", "x64", "arm64"]:
     """Returns the CPU architecture, which may be `"x32"`, `"x64"` or `"arm64"`."""
     ...
-
 
 def channel() -> Literal["stable", "dev"]:
     """Returns the release channel, which may be `"stable"` or `"dev"`."""
     ...
 
-
 def executable_path() -> str:
     """Returns the path to the "sublime_text" executable."""
     ...
-
 
 def executable_hash() -> Tuple[str, str, str]:
     """
@@ -204,36 +198,29 @@ def executable_hash() -> Tuple[str, str, str]:
     """
     ...
 
-
 def packages_path() -> str:
     """Returns the path where all the user's loose packages are located."""
     ...
-
 
 def installed_packages_path() -> str:
     """Returns the path where all the user's `.sublime-package` files are located."""
     ...
 
-
 def cache_path() -> str:
     """Returns the path where Sublime Text stores cache files."""
     ...
-
 
 def status_message(msg: str) -> None:
     """Shows a message in the status bar."""
     ...
 
-
 def error_message(msg: str) -> None:
     """Displays an error dialog to the user."""
     ...
 
-
 def message_dialog(msg: str) -> None:
     """Displays a message dialog to the user."""
     ...
-
 
 def ok_cancel_dialog(msg: str, ok_title: str = "", title: str = "") -> bool:
     """
@@ -248,8 +235,9 @@ def ok_cancel_dialog(msg: str, ok_title: str = "", title: str = "") -> bool:
     """
     ...
 
-
-def yes_no_cancel_dialog(msg: str, yes_title: str = "", no_title: str = "", title: str = "") -> int:
+def yes_no_cancel_dialog(
+    msg: str, yes_title: str = "", no_title: str = "", title: str = ""
+) -> int:
     """
     Displays a `yes` `no` `cancel` question dialog to the user
     If `yes_title` and/or `no_title` are provided, they will be used as the
@@ -264,7 +252,6 @@ def yes_no_cancel_dialog(msg: str, yes_title: str = "", no_title: str = "", titl
     Returns `DIALOG_YES`, `DIALOG_NO` or `DIALOG_CANCEL`.
     """
     ...
-
 
 def open_dialog(
     callback: Callable[[None | str | Sequence[str]], None],
@@ -291,7 +278,6 @@ def open_dialog(
     """
     ...
 
-
 def save_dialog(
     callback: Callable[[None | str], None],
     file_types: Sequence[Tuple[str, Sequence[str]]] = [],
@@ -315,7 +301,6 @@ def save_dialog(
     """
     ...
 
-
 def select_folder_dialog(
     callback: Callable[[None | str | Sequence[str]], None],
     directory: None | str = None,
@@ -336,11 +321,9 @@ def select_folder_dialog(
     """
     ...
 
-
 def run_command(cmd: str, args: None | Dict[str, Any] = None) -> None:
     """Runs the named `ApplicationCommand` with the (optional) given `args`."""
     ...
-
 
 def format_command(cmd: str, args: None | Dict[str, Any] = None) -> str:
     """
@@ -351,11 +334,7 @@ def format_command(cmd: str, args: None | Dict[str, Any] = None) -> str:
     """
     ...
 
-
-def html_format_command(cmd: str, args: None | Dict[str, Any] = None) -> str:
-    ...
-
-
+def html_format_command(cmd: str, args: None | Dict[str, Any] = None) -> str: ...
 def command_url(cmd: str, args: None | Dict[str, Any] = None) -> str:
     """
     Creates a `subl:` protocol URL for executing a command in a minihtml link.
@@ -364,15 +343,15 @@ def command_url(cmd: str, args: None | Dict[str, Any] = None) -> str:
     """
     ...
 
-
-def get_clipboard_async(callback: Callable[[str], None], size_limit: int = 16777216) -> None:
+def get_clipboard_async(
+    callback: Callable[[str], None], size_limit: int = 16777216
+) -> None:
     """
     Calls `callback` with the contents of the clipboard. For performance reasons
     if the size of the clipboard content is bigger than `size_limit`, an empty
     string will be returned.
     """
     ...
-
 
 def get_clipboard(size_limit: int = 16777216) -> str:
     """
@@ -384,11 +363,9 @@ def get_clipboard(size_limit: int = 16777216) -> str:
     """
     ...
 
-
 def set_clipboard(text: str) -> None:
     """Sets the contents of the clipboard."""
     ...
-
 
 def log_commands(flag: None | bool = None) -> None:
     """
@@ -396,7 +373,6 @@ def log_commands(flag: None | bool = None) -> None:
     and the menu will be logged to the console.
     """
     ...
-
 
 def get_log_commands() -> bool:
     """
@@ -406,14 +382,12 @@ def get_log_commands() -> bool:
     """
     ...
 
-
 def log_input(flag: None | bool = None) -> None:
     """
     Enables or disables input logging.
     This is useful to find the names of certain keys on the keyboard.
     """
     ...
-
 
 def get_log_input() -> bool:
     """
@@ -423,13 +397,11 @@ def get_log_input() -> bool:
     """
     ...
 
-
 def log_fps(flag: None | bool = None) -> None:
     """
     Enables or disables fps logging.
     """
     ...
-
 
 def get_log_fps() -> bool:
     """
@@ -439,14 +411,12 @@ def get_log_fps() -> bool:
     """
     ...
 
-
 def log_result_regex(flag: None | bool = None) -> None:
     """
     Enables or disables result regex logging.
     This is useful when trying to debug `file_regex` and `line_regex` in build systems.
     """
     ...
-
 
 def get_log_result_regex() -> bool:
     """
@@ -456,11 +426,7 @@ def get_log_result_regex() -> bool:
     """
     ...
 
-
-def log_indexing(flag: None | bool = None) -> None:
-    ...
-
-
+def log_indexing(flag: None | bool = None) -> None: ...
 def get_log_indexing() -> bool:
     """
     Returns whether `log_indexing()` is enabled or not.
@@ -469,11 +435,7 @@ def get_log_indexing() -> bool:
     """
     ...
 
-
-def log_build_systems(flag: None | bool = None) -> None:
-    ...
-
-
+def log_build_systems(flag: None | bool = None) -> None: ...
 def get_log_build_systems() -> bool:
     """
     Returns whether `log_build_systems()` is enabled or not.
@@ -481,7 +443,6 @@ def get_log_build_systems() -> bool:
     @version ST(>=4099)
     """
     ...
-
 
 def log_control_tree(flag: None | bool = None) -> None:
     """
@@ -491,7 +452,6 @@ def log_control_tree(flag: None | bool = None) -> None:
     """
     ...
 
-
 def get_log_control_tree() -> bool:
     """
     Returns whether `log_control_tree()` is enabled or not.
@@ -500,11 +460,9 @@ def get_log_control_tree() -> bool:
     """
     ...
 
-
 def ui_info() -> Dict[str, Any]:
     """Gets the UI information such as theme/color-scheme palette."""
     ...
-
 
 def score_selector(scope_name: str, selector: str) -> int:
     """
@@ -516,21 +474,17 @@ def score_selector(scope_name: str, selector: str) -> int:
     """
     ...
 
-
 def load_resource(name: str) -> str:
     """Loads the given resource. The `name` should be in the format `Packages/Default/Main.sublime-menu`."""
     ...
-
 
 def load_binary_resource(name: str) -> bytes:
     """Loads the given resource. The `name` should be in the format `Packages/Default/Main.sublime-menu`."""
     ...
 
-
 def find_resources(pattern: str) -> List[str]:
     """Finds resources whose file name matches the given `pattern`."""
     ...
-
 
 def encode_value(val: Any, pretty: bool = ...) -> str:
     """
@@ -539,7 +493,6 @@ def encode_value(val: Any, pretty: bool = ...) -> str:
     """
     ...
 
-
 def decode_value(data: str) -> Any:
     """
     Decodes a JSON string into an object.
@@ -547,8 +500,9 @@ def decode_value(data: str) -> Any:
     """
     ...
 
-
-def expand_variables(val: T_ExpandableVar, variables: Dict[str, str]) -> T_ExpandableVar:
+def expand_variables(
+    val: T_ExpandableVar, variables: Dict[str, str]
+) -> T_ExpandableVar:
     """
     Expands any variables in the string `value` using the variables defined in the dictionary
     `variables` `value` may also be a `list` or `dict`, in which case the structure will be
@@ -559,7 +513,6 @@ def expand_variables(val: T_ExpandableVar, variables: Dict[str, str]) -> T_Expan
     ```
     """
     ...
-
 
 def load_settings(base_name: str) -> Settings:
     """
@@ -572,11 +525,9 @@ def load_settings(base_name: str) -> Settings:
     """
     ...
 
-
 def save_settings(base_name: str) -> None:
     """Flushes any in-memory changes to the named settings object to disk."""
     ...
-
 
 def set_timeout(f: Callback0, timeout_ms: float = 0) -> None:
     """
@@ -584,7 +535,6 @@ def set_timeout(f: Callback0, timeout_ms: float = 0) -> None:
     while the function is running.
     """
     ...
-
 
 def set_timeout_async(f: Callback0, timeout_ms: float = 0) -> None:
     """
@@ -594,16 +544,13 @@ def set_timeout_async(f: Callback0, timeout_ms: float = 0) -> None:
     """
     ...
 
-
 def active_window() -> Window:
     """Returns the most recently used window."""
     ...
 
-
 def windows() -> List[Window]:
     """Returns a list of all the open windows."""
     ...
-
 
 def get_macro() -> List[CommandArgsDict]:
     """
@@ -611,7 +558,6 @@ def get_macro() -> List[CommandArgsDict]:
     Each dict will contain the keys "command" and "args".
     """
     ...
-
 
 def project_history() -> List[str]:
     """
@@ -621,7 +567,6 @@ def project_history() -> List[str]:
     """
     ...
 
-
 def folder_history() -> List[str]:
     """
     Returns paths of recently opened folders.
@@ -630,7 +575,6 @@ def folder_history() -> List[str]:
     """
     ...
 
-
 class Window:
     """This class represents windows and provides an interface of methods to interact with them."""
 
@@ -638,21 +582,11 @@ class Window:
     settings_object: None | Settings
     template_settings_object: None | Settings
 
-    def __init__(self, id: int) -> None:
-        ...
-
-    def __hash__(self) -> int:
-        ...
-
-    def __eq__(self, other: Any) -> bool:
-        ...
-
-    def __bool__(self) -> bool:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    def __init__(self, id: int) -> None: ...
+    def __hash__(self) -> int: ...
+    def __eq__(self, other: Any) -> bool: ...
+    def __bool__(self) -> bool: ...
+    def __repr__(self) -> str: ...
     def id(self) -> int:
         """Returns a number that uniquely identifies this window."""
         ...
@@ -676,7 +610,9 @@ class Window:
         """Returns the currently edited view."""
         ...
 
-    def new_html_sheet(self, name: str, contents: str, flags: int = 0, group: int = -1) -> HtmlSheet:
+    def new_html_sheet(
+        self, name: str, contents: str, flags: int = 0, group: int = -1
+    ) -> HtmlSheet:
         """
         Constructs a sheet with HTML contents rendered using minihtml.
 
@@ -769,9 +705,7 @@ class Window:
         """Switches to the given `view`."""
         ...
 
-    def select_sheets(self, sheets: Iterable[Sheet]) -> None:
-        ...
-
+    def select_sheets(self, sheets: Iterable[Sheet]) -> None: ...
     def bring_to_front(self) -> None:
         """
         Brings the window in front of any other windows.
@@ -837,12 +771,8 @@ class Window:
         """Returns all open views in the window."""
         ...
 
-    def selected_sheets(self) -> List[Sheet]:
-        ...
-
-    def selected_sheets_in_group(self, group: int) -> List[Sheet]:
-        ...
-
+    def selected_sheets(self) -> List[Sheet]: ...
+    def selected_sheets_in_group(self, group: int) -> List[Sheet]: ...
     def active_sheet_in_group(self, group: int) -> None | Sheet:
         """Returns the currently focused sheet in the given `group`."""
         ...
@@ -1152,7 +1082,6 @@ class Window:
         """Show a message in the status bar"""
         ...
 
-
 class Edit:
     """
     `Edit` objects have no functions, they exist to group buffer modifications.
@@ -1164,12 +1093,8 @@ class Edit:
 
     edit_token: int
 
-    def __init__(self, token: int) -> None:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    def __init__(self, token: int) -> None: ...
+    def __repr__(self) -> str: ...
 
 class Region:
     """Represents an area of the buffer. Empty regions, where `a == b` are valid."""
@@ -1178,30 +1103,14 @@ class Region:
     b: int
     xpos: int
 
-    def __init__(self, a: int, b: None | int = None, xpos: int = -1) -> None:
-        ...
-
-    def __iter__(self) -> Iterator[int]:
-        ...
-
-    def __str__(self) -> str:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
-    def __len__(self) -> int:
-        ...
-
-    def __eq__(self, rhs: Any) -> bool:
-        ...
-
-    def __lt__(self, rhs: Region) -> bool:
-        ...
-
-    def __contains__(self, v: Region | Point) -> bool:
-        ...
-
+    def __init__(self, a: int, b: None | int = None, xpos: int = -1) -> None: ...
+    def __iter__(self) -> Iterator[int]: ...
+    def __str__(self) -> str: ...
+    def __repr__(self) -> str: ...
+    def __len__(self) -> int: ...
+    def __eq__(self, rhs: Any) -> bool: ...
+    def __lt__(self, rhs: Region) -> bool: ...
+    def __contains__(self, v: Region | Point) -> bool: ...
     def to_tuple(self) -> Tuple[Point, Point]:
         """
         Returns a 2-element tuple of:
@@ -1254,7 +1163,6 @@ class Region:
         """
         ...
 
-
 class HistoricPosition:
     """
     Provides a snapshot of the row and column info for a point, before changes were made to a `View`.
@@ -1267,12 +1175,10 @@ class HistoricPosition:
     col_utf16: int
     col_utf8: int
 
-    def __init__(self, pt: Point, row: int, col: int, col_u16: int, col_u8: int) -> None:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    def __init__(
+        self, pt: Point, row: int, col: int, col_u16: int, col_u8: int
+    ) -> None: ...
+    def __repr__(self) -> str: ...
 
 class TextChange:
     """
@@ -1286,12 +1192,8 @@ class TextChange:
     len_utf8: int
     str: Str
 
-    def __init__(self, pa: HistoricPosition, pb: HistoricPosition, s: Str) -> None:
-        ...
-
-    def __repr__(self) -> Str:
-        ...
-
+    def __init__(self, pa: HistoricPosition, pb: HistoricPosition, s: Str) -> None: ...
+    def __repr__(self) -> Str: ...
 
 class Selection(Reversible[Region]):
     """
@@ -1301,39 +1203,17 @@ class Selection(Reversible[Region]):
 
     view_id: int
 
-    def __init__(self, id: int) -> None:
-        ...
-
-    def __iter__(self) -> Iterator[Region]:
-        ...
-
-    def __len__(self) -> int:
-        ...
-
-    def __getitem__(self, index: int) -> Region:
-        ...
-
-    def __delitem__(self, index: int) -> None:
-        ...
-
-    def __eq__(self, rhs: Any) -> bool:
-        ...
-
-    def __lt__(self, rhs: Selection) -> bool:
-        ...
-
-    def __bool__(self) -> bool:
-        ...
-
-    def __str__(self) -> str:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
-    def __reversed__(self) -> Iterator[Region]:
-        ...
-
+    def __init__(self, id: int) -> None: ...
+    def __iter__(self) -> Iterator[Region]: ...
+    def __len__(self) -> int: ...
+    def __getitem__(self, index: int) -> Region: ...
+    def __delitem__(self, index: int) -> None: ...
+    def __eq__(self, rhs: Any) -> bool: ...
+    def __lt__(self, rhs: Selection) -> bool: ...
+    def __bool__(self) -> bool: ...
+    def __str__(self) -> str: ...
+    def __repr__(self) -> str: ...
+    def __reversed__(self) -> Iterator[Region]: ...
     def is_valid(self) -> bool:
         """Determines if this `Selection` object is still valid."""
         ...
@@ -1365,10 +1245,8 @@ class Selection(Reversible[Region]):
         """
         ...
 
-
 def make_sheet(sheet_id: int) -> Sheet:
     """Create a `Sheet` object with the given ID."""
-
 
 class Sheet:
     """
@@ -1378,18 +1256,10 @@ class Sheet:
 
     sheet_id: int
 
-    def __init__(self, id: int) -> None:
-        ...
-
-    def __hash__(self) -> int:
-        ...
-
-    def __eq__(self, other: Any) -> bool:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    def __init__(self, id: int) -> None: ...
+    def __hash__(self) -> int: ...
+    def __eq__(self, other: Any) -> bool: ...
+    def __repr__(self) -> str: ...
     def id(self) -> int:
         """Returns a number that uniquely identifies this sheet."""
         ...
@@ -1429,35 +1299,29 @@ class Sheet:
         """The (layout) group that the sheet is contained within."""
         ...
 
-    def close(self, on_close: None | Callable[[bool], None] = lambda did_close: None) -> None:
+    def close(
+        self, on_close: None | Callable[[bool], None] = lambda did_close: None
+    ) -> None:
         """Closes the sheet."""
         ...
-
 
 class TextSheet(Sheet):
     sheet_id: int
 
-    def __repr__(self) -> str:
-        ...
-
+    def __repr__(self) -> str: ...
     def set_name(self, name: str) -> None:
         """Sets the name of this `Sheet`."""
         ...
 
-
 class ImageSheet(Sheet):
     sheet_id: int
 
-    def __repr__(self) -> str:
-        ...
-
+    def __repr__(self) -> str: ...
 
 class HtmlSheet(Sheet):
     sheet_id: int
 
-    def __repr__(self) -> str:
-        ...
-
+    def __repr__(self) -> str: ...
     def set_name(self, name: str) -> None:
         """Sets the name of this `Sheet`."""
         ...
@@ -1465,7 +1329,6 @@ class HtmlSheet(Sheet):
     def set_contents(self, contents: str) -> None:
         """Sets the content of this `Sheet`."""
         ...
-
 
 class ContextStackFrame:
     """
@@ -1476,12 +1339,10 @@ class ContextStackFrame:
     source_file: str
     source_location: Tuple[int, int]
 
-    def __init__(self, context_name: str, source_file: str, source_location: Tuple[int, int]) -> None:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    def __init__(
+        self, context_name: str, source_file: str, source_location: Tuple[int, int]
+    ) -> None: ...
+    def __repr__(self) -> str: ...
 
 class View:
     """
@@ -1493,24 +1354,12 @@ class View:
     selection: Selection
     settings_object: Settings
 
-    def __init__(self, id: int) -> None:
-        ...
-
-    def __len__(self) -> int:
-        ...
-
-    def __hash__(self) -> int:
-        ...
-
-    def __eq__(self, other: Any) -> bool:
-        ...
-
-    def __bool__(self) -> bool:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    def __init__(self, id: int) -> None: ...
+    def __len__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __eq__(self, other: Any) -> bool: ...
+    def __bool__(self) -> bool: ...
+    def __repr__(self) -> str: ...
     def id(self) -> int:
         """Returns a number that uniquely identifies this view."""
         ...
@@ -1589,7 +1438,9 @@ class View:
         """
         ...
 
-    def close(self, on_close: None | Callable[[bool], None] = lambda did_close: None) -> bool:
+    def close(
+        self, on_close: None | Callable[[bool], None] = lambda did_close: None
+    ) -> bool:
         """Closes this view."""
         ...
 
@@ -1675,15 +1526,11 @@ class View:
         """Returns the number of character in the file."""
         ...
 
-    def begin_edit(self, edit_token: int, cmd: str, args: None | Dict[str, Any] = None) -> Edit:
-        ...
-
-    def end_edit(self, edit: Edit) -> None:
-        ...
-
-    def is_in_edit(self) -> bool:
-        ...
-
+    def begin_edit(
+        self, edit_token: int, cmd: str, args: None | Dict[str, Any] = None
+    ) -> Edit: ...
+    def end_edit(self, edit: Edit) -> None: ...
+    def is_in_edit(self) -> bool: ...
     def insert(self, edit: Edit, pt: Point, text: str) -> int:
         """
         Inserts the given string in the buffer at the specified point
@@ -1782,9 +1629,7 @@ class View:
         """
         ...
 
-    def meta_info(self, key: str, pt: Point) -> Dict[str, Any]:
-        ...
-
+    def meta_info(self, key: str, pt: Point) -> Dict[str, Any]: ...
     def extract_tokens_with_scopes(self, r: Region) -> List[Tuple[Vector, str]]:
         """
         Gets the scope information for the given region.
@@ -2018,7 +1863,9 @@ class View:
         """
         ...
 
-    def text_point_utf16(self, row: int, col: int, *, clamp_column: bool = False) -> int:
+    def text_point_utf16(
+        self, row: int, col: int, *, clamp_column: bool = False
+    ) -> int:
         """
         (UTF-16) Converts a row and column into a text point.
 
@@ -2194,9 +2041,7 @@ class View:
         content: str,
         layout: int,
         on_navigate: None | Callback1[str] = None,
-    ) -> int:
-        ...
-
+    ) -> int: ...
     def erase_phantoms(self, key: str) -> None:
         """Remove the named phantoms."""
         ...
@@ -2205,12 +2050,8 @@ class View:
         """Remove the phantom with the given phantom ID."""
         ...
 
-    def query_phantom(self, pid: int) -> List[Tuple[int, int]]:
-        ...
-
-    def query_phantoms(self, pids: Sequence[int]) -> List[Tuple[int, int]]:
-        ...
-
+    def query_phantom(self, pid: int) -> List[Tuple[int, int]]: ...
+    def query_phantoms(self, pids: Sequence[int]) -> List[Tuple[int, int]]: ...
     def assign_syntax(self, syntax: str | Syntax) -> None:
         """
         Sets the syntax for this view.
@@ -2245,12 +2086,8 @@ class View:
         """
         ...
 
-    def indexed_symbols(self) -> List[Tuple[Region, str]]:
-        ...
-
-    def indexed_references(self) -> List[Tuple[Region, str]]:
-        ...
-
+    def indexed_symbols(self) -> List[Tuple[Region, str]]: ...
+    def indexed_references(self) -> List[Tuple[Region, str]]: ...
     def symbol_regions(self) -> List[SymbolRegion]:
         """Returns a list of sublime.SymbolRegion() objects for the symbols in this view."""
         ...
@@ -2286,15 +2123,9 @@ class View:
         """Clears the named status."""
         ...
 
-    def extract_completions(self, prefix: str, tp: Point = -1) -> List[str]:
-        ...
-
-    def find_all_results(self) -> List[Tuple[str, int, int]]:
-        ...
-
-    def find_all_results_with_text(self) -> List[Tuple[str, int, int, str]]:
-        ...
-
+    def extract_completions(self, prefix: str, tp: Point = -1) -> List[str]: ...
+    def find_all_results(self) -> List[Tuple[str, int, int]]: ...
+    def find_all_results_with_text(self) -> List[Tuple[str, int, int, str]]: ...
     def command_history(
         self,
         delta: int,
@@ -2322,7 +2153,9 @@ class View:
         """Sets the overwrite status."""
         ...
 
-    def show_popup_menu(self, items: Sequence[str], on_select: Callback1[int], flags: int = 0) -> None:
+    def show_popup_menu(
+        self, items: Sequence[str], on_select: Callback1[int], flags: int = 0
+    ) -> None:
         """
         Shows a pop up menu at the caret, to select an item in a list. `on_done`
         will be called once, with the index of the selected item. If the pop up
@@ -2439,24 +2272,16 @@ class View:
         """
         ...
 
-
 def _buffers() -> List[Buffer]:
     """Returns all available Buffer objects"""
     ...
 
-
 class Buffer:
     buffer_id: int
 
-    def __init__(self, id: int) -> None:
-        ...
-
-    def __hash__(self) -> int:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    def __init__(self, id: int) -> None: ...
+    def __hash__(self) -> int: ...
+    def __repr__(self) -> str: ...
     def id(self) -> int:
         """Gets the ID of this buffer"""
         ...
@@ -2473,30 +2298,19 @@ class Buffer:
         """Returns the primary view which is attched to this Buffer"""
         ...
 
-
 class Settings:
     settings_id: int
 
-    def __init__(self, id: int) -> None:
-        ...
-
+    def __init__(self, id: int) -> None: ...
     def __getitem__(self, key: str) -> Any:
         # The "Any" annotation should be "StValue" but it will cause annoying errors
         # when casting the returned value. So we probably just use "Any"...
         ...
 
-    def __setitem__(self, key: str, value: Any) -> None:
-        ...
-
-    def __delitem__(self, key: str) -> None:
-        ...
-
-    def __contains__(self, key: str) -> bool:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    def __setitem__(self, key: str, value: Any) -> None: ...
+    def __delitem__(self, key: str) -> None: ...
+    def __contains__(self, key: str) -> bool: ...
+    def __repr__(self) -> str: ...
     def to_dict(self) -> Dict[str, Any]:
         """
         Return the settings as a dict. This is not very fast.
@@ -2517,7 +2331,10 @@ class Settings:
 
     def update(
         self,
-        pairs: Dict[str, Any] | Mapping[str, Any] | Iterable[Tuple[str, Any]] | HasKeysMethod = tuple(),
+        pairs: Dict[str, Any]
+        | Mapping[str, Any]
+        | Iterable[Tuple[str, Any]]
+        | HasKeysMethod = tuple(),
         /,
         **kwargs: Any,
     ) -> None:
@@ -2563,7 +2380,6 @@ class Settings:
         """Remove all callbacks registered with the given `tag`."""
         ...
 
-
 class Phantom:
     """
     Creates a phantom attached to a region
@@ -2594,15 +2410,9 @@ class Phantom:
         content: str,
         layout: int,
         on_navigate: None | Callback1[str] = None,
-    ) -> None:
-        ...
-
-    def __eq__(self, rhs: Any) -> bool:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    ) -> None: ...
+    def __eq__(self, rhs: Any) -> bool: ...
+    def __repr__(self) -> str: ...
     def to_tuple(self) -> Tuple[Tuple[int, int], str, int, None | Callback1[str]]:
         """
         Returns a 4-element tuple of:
@@ -2621,7 +2431,6 @@ class Phantom:
         """
         ...
 
-
 class PhantomSet:
     """
     A collection that manages Phantoms and the process of adding them,
@@ -2632,15 +2441,9 @@ class PhantomSet:
     key: str
     phantoms: List[Phantom]
 
-    def __init__(self, view: View, key: str = "") -> None:
-        ...
-
-    def __del__(self) -> None:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    def __init__(self, view: View, key: str = "") -> None: ...
+    def __del__(self) -> None: ...
+    def __repr__(self) -> str: ...
     def update(self, new_phantoms: Sequence[Phantom]) -> None:
         """
         phantoms should be a sequence of phantoms.
@@ -2650,16 +2453,11 @@ class PhantomSet:
         """
         ...
 
-
 class Html:
     data: Any
 
-    def __init__(self, data: Any) -> None:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    def __init__(self, data: Any) -> None: ...
+    def __repr__(self) -> str: ...
 
 class CompletionList:
     """
@@ -2673,7 +2471,9 @@ class CompletionList:
     completions: List[Completion]
     flags: int
 
-    def __init__(self, completions: None | Sequence[Completion] = None, flags: int = 0) -> None:
+    def __init__(
+        self, completions: None | Sequence[Completion] = None, flags: int = 0
+    ) -> None:
         """
         ---
 
@@ -2694,13 +2494,11 @@ class CompletionList:
         """
         ...
 
-    def __repr__(self) -> str:
-        ...
-
-    def _set_target(self, target: None | Any) -> None:
-        ...
-
-    def set_completions(self, completions: Sequence[Completion], flags: int = 0) -> None:
+    def __repr__(self) -> str: ...
+    def _set_target(self, target: None | Any) -> None: ...
+    def set_completions(
+        self, completions: Sequence[Completion], flags: int = 0
+    ) -> None:
         """
         Sets the list of completions, allowing the list to be displayed to the user.
 
@@ -2718,7 +2516,6 @@ class CompletionList:
            prevent Sublime Text from changing the completion order
         """
         ...
-
 
 class CompletionItem:
     """
@@ -2743,15 +2540,9 @@ class CompletionItem:
         completion_format: int = COMPLETION_FORMAT_TEXT,
         kind: CompletionKind = KIND_AMBIGUOUS,
         details: str = "",
-    ) -> None:
-        ...
-
-    def __eq__(self, rhs: Any) -> bool:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    ) -> None: ...
+    def __eq__(self, rhs: Any) -> bool: ...
+    def __repr__(self) -> str: ...
     @classmethod
     def snippet_completion(
         cls,
@@ -2802,7 +2593,6 @@ class CompletionItem:
         """
         ...
 
-
 def list_syntaxes() -> List[Syntax]:
     """
     Returns a list of Syntaxes for all known syntaxes.
@@ -2810,7 +2600,6 @@ def list_syntaxes() -> List[Syntax]:
     @version ST(>=4050)
     """
     ...
-
 
 def syntax_from_path(path: str) -> None | Syntax:
     """
@@ -2820,7 +2609,6 @@ def syntax_from_path(path: str) -> None | Syntax:
     """
     ...
 
-
 def find_syntax_by_name(name: str) -> List[Syntax]:
     """
     Find syntaxes with the specified name. Name must match exactly.
@@ -2829,7 +2617,6 @@ def find_syntax_by_name(name: str) -> List[Syntax]:
     """
     ...
 
-
 def find_syntax_by_scope(scope: str) -> List[Syntax]:
     """
     Find syntaxes with the specified scope. Scope must match exactly.
@@ -2837,7 +2624,6 @@ def find_syntax_by_scope(scope: str) -> List[Syntax]:
     @version ST(>=4050)
     """
     ...
-
 
 def find_syntax_for_file(path: str, first_line: str = "") -> None | Syntax:
     """
@@ -2848,25 +2634,16 @@ def find_syntax_for_file(path: str, first_line: str = "") -> None | Syntax:
     """
     ...
 
-
 class Syntax:
     path: str
     name: str
     hidden: bool
     scope: str
 
-    def __init__(self, path: str, name: str, hidden: bool, scope: str) -> None:
-        ...
-
-    def __eq__(self, other: Any) -> bool:
-        ...
-
-    def __hash__(self) -> int:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    def __init__(self, path: str, name: str, hidden: bool, scope: str) -> None: ...
+    def __eq__(self, other: Any) -> bool: ...
+    def __hash__(self) -> int: ...
+    def __repr__(self) -> str: ...
 
 class QuickPanelItem:
     trigger: str
@@ -2880,12 +2657,8 @@ class QuickPanelItem:
         details: str | Sequence[str] = "",
         annotation: str = "",
         kind: CompletionKind = KIND_AMBIGUOUS,
-    ) -> None:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    ) -> None: ...
+    def __repr__(self) -> str: ...
 
 class SymbolRegion:
     name: str
@@ -2901,12 +2674,8 @@ class SymbolRegion:
         syntax: Syntax,
         type: int,
         kind: CompletionKind,
-    ) -> None:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    ) -> None: ...
+    def __repr__(self) -> str: ...
 
 class ListInputItem(Generic[T]):
     text: str
@@ -2922,12 +2691,8 @@ class ListInputItem(Generic[T]):
         details: str = "",
         annotation: str = "",
         kind: CompletionKind = KIND_AMBIGUOUS,
-    ) -> None:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    ) -> None: ...
+    def __repr__(self) -> str: ...
 
 class SymbolLocation:
     path: str
@@ -2947,12 +2712,8 @@ class SymbolLocation:
         syntax: Syntax,
         type: int,
         kind: CompletionKind,
-    ) -> None:
-        ...
-
-    def __repr__(self) -> str:
-        ...
-
+    ) -> None: ...
+    def __repr__(self) -> str: ...
     def path_encoded_position(self) -> str:
         """
         :return:

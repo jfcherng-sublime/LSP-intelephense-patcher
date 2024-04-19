@@ -1,22 +1,24 @@
+from __future__ import annotations
+
 import datetime
-import io
 import json
 import operator
 import os
 import re
 import shutil
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
+from collections.abc import Callable, Iterable
+from typing import Any
 
 
 def now_isoformat() -> str:
     return datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat()
 
 
-def backup_files(files: Iterable[str], force_overwrite: bool = False) -> List[str]:
+def backup_files(files: Iterable[str], force_overwrite: bool = False) -> list[str]:
     ok_files = []
 
     for file in files:
-        file_backup = file + ".bak"
+        file_backup = f"{file}.bak"
 
         if os.path.isdir(file_backup):
             continue
@@ -28,7 +30,7 @@ def backup_files(files: Iterable[str], force_overwrite: bool = False) -> List[st
     return ok_files
 
 
-def restore_directory(path: str) -> List[str]:
+def restore_directory(path: str) -> list[str]:
     if not os.path.isdir(path):
         return []
 
@@ -52,9 +54,9 @@ def json_dumps(value: Any, **kwargs) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, **kwargs)
 
 
-def file_get_content(path: str, **kwargs) -> Optional[str]:
+def file_get_content(path: str, **kwargs) -> str | None:
     try:
-        with io.open(path, "r", encoding="utf-8", **kwargs) as f:
+        with open(path, encoding="utf-8", **kwargs) as f:
             return f.read()
     except Exception:
         return None
@@ -62,7 +64,7 @@ def file_get_content(path: str, **kwargs) -> Optional[str]:
 
 def file_set_content(path: str, content: str, **kwargs) -> bool:
     try:
-        with io.open(path, "w", encoding="utf-8", newline="\n", **kwargs) as f:
+        with open(path, "w", encoding="utf-8", newline="\n", **kwargs) as f:
             f.write(content)
             return True
     except Exception:
@@ -110,10 +112,8 @@ class SchemaVersion:
         raise ValueError("SchemaVersion can only be compared with itself or str.")
 
     @staticmethod
-    def from_str(v_str: str) -> "SchemaVersion":
-        m = re.search(r"^(\d+)(?:\.(\d+))?(?:\.(\d+))?", v_str.strip())
-
-        if not m:
+    def from_str(v_str: str) -> SchemaVersion:
+        if not (m := re.search(r"^(\d+)(?:\.(\d+))?(?:\.(\d+))?", v_str.strip())):
             raise ValueError("The input is not a valid version string...")
 
         major = int(m.group(1))
@@ -131,22 +131,26 @@ class AlreadyPatchedException(Exception):
 class PatcherUnsupportedException(Exception):
     def __init__(
         self,
-        version: Union[str, SchemaVersion],
-        supported_versions: Iterable[Union[str, SchemaVersion]] = [],
+        version: str | SchemaVersion,
+        supported_versions: Iterable[str | SchemaVersion] = [],
     ) -> None:
-        msg = '"intelephense" v{} is probably unsupported (or untested) by the patcher...'.format(version)
+        msg = f'"intelephense" v{version} is probably unsupported (or untested) by the patcher...'
 
-        v_versions = ["v" + str(v) for v in supported_versions]
-        if v_versions:
-            msg += " The patcher supports {}".format(", ".join(v_versions))
-
+        if v_versions := [f"v{v}" for v in supported_versions]:
+            msg += f' The patcher supports {", ".join(v_versions)}'
         super().__init__(msg)
 
 
 class PatchPattern:
     __slots__ = ("search", "replace", "flags", "count")
 
-    def __init__(self, search: str = "", replace: str = "", flags: int = re.UNICODE, count: int = 0) -> None:
+    def __init__(
+        self,
+        search: str = "",
+        replace: str = "",
+        flags: int = re.UNICODE,
+        count: int = 0,
+    ) -> None:
         self.search = search
         self.replace = replace
         self.flags = flags
@@ -168,14 +172,12 @@ class Patcher:
     PATCH_INFO_MARK_PAIR = ("--- PATCH_INFO_BEGIN ---", "--- PATCH_INFO_END ---")
     PATCHED_MARK_DETECTION = "/** FILE HAS BEEN PATCHED **/"
 
-    PATCHED_MARK = "\n".join(
-        [
-            # indicates file has been patched
-            PATCHED_MARK_DETECTION,
-            # patch info
-            "/** " + " {info} ".join(PATCH_INFO_MARK_PAIR) + " **/",
-        ]
-    )
+    PATCHED_MARK = "\n".join([
+        # indicates file has been patched
+        PATCHED_MARK_DETECTION,
+        # patch info
+        "/** " + " {info} ".join(PATCH_INFO_MARK_PAIR) + " **/",
+    ])
 
     LICENSE_OBJECT = {
         "message": {
@@ -189,7 +191,7 @@ class Patcher:
     }
 
     @classmethod
-    def patch_file(cls, path: str, allow_unsupported: bool = False) -> Tuple[bool, int]:
+    def patch_file(cls, path: str, allow_unsupported: bool = False) -> tuple[bool, int]:
         if not path or not os.path.isfile(path):
             return (False, 0)
 
@@ -206,7 +208,7 @@ class Patcher:
         return (is_success, occurrences)
 
     @classmethod
-    def patch_str(cls, content: str, allow_unsupported: bool = False) -> Tuple[str, int]:
+    def patch_str(cls, content: str, allow_unsupported: bool = False) -> tuple[str, int]:
         if content.rfind(cls.PATCHED_MARK_DETECTION) > -1:
             raise AlreadyPatchedException()
 
@@ -225,7 +227,7 @@ class Patcher:
         )
 
     @classmethod
-    def get_patch_patterns(cls) -> List[PatchPattern]:
+    def get_patch_patterns(cls) -> list[PatchPattern]:
         LICENSE_OBJECT_JS = json_dumps(cls.LICENSE_OBJECT)
 
         return [
@@ -270,7 +272,7 @@ class Patcher:
         )
 
     @classmethod
-    def extract_patch_info(cls, path_or_content: str) -> Dict[str, Any]:
+    def extract_patch_info(cls, path_or_content: str) -> dict[str, Any]:
         content = file_get_content(path_or_content) or path_or_content
         region = [content.rfind(mark) for mark in cls.PATCH_INFO_MARK_PAIR]
 
@@ -282,7 +284,7 @@ class Patcher:
         return json.loads(content[slice(*region)].strip())
 
     @classmethod
-    def extract_intelephense_version(cls, path_or_content: str) -> "SchemaVersion":
+    def extract_intelephense_version(cls, path_or_content: str) -> SchemaVersion:
         content = file_get_content(path_or_content) or path_or_content
         m = re.search(r'\bVERSION=["\'](\d+(?:\.\d+)?(?:\.\d+)?)', content)
 

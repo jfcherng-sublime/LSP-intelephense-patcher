@@ -27,7 +27,14 @@ from typing import (
 )
 
 import sublime
-from _sublime_types import AnyCallable, Completion, CompletionNormalized, EventDict, Point, T_AnyCallable
+from _sublime_types import (
+    AnyCallable,
+    Completion,
+    CompletionNormalized,
+    EventDict,
+    Point,
+    T_AnyCallable,
+)
 
 # ----- #
 # types #
@@ -51,7 +58,11 @@ text_command_classes: List[Type] = []
 view_event_listener_classes: List[Type] = []
 view_event_listeners: Dict[int, List[ViewEventListener]] = {}
 
-all_command_classes: List[List[Type]] = [application_command_classes, window_command_classes, text_command_classes]
+all_command_classes: List[List[Type]] = [
+    application_command_classes,
+    window_command_classes,
+    text_command_classes,
+]
 
 all_callbacks: Dict[str, List[object]] = {
     "on_init": [],
@@ -109,7 +120,10 @@ all_callbacks: Dict[str, List[object]] = {
 
 pending_on_activated_async_lock: threading.Lock = threading.Lock()
 
-pending_on_activated_async_callbacks: Dict[str, List[Type]] = {"EventListener": [], "ViewEventListener": []}
+pending_on_activated_async_callbacks: Dict[str, List[Type]] = {
+    "EventListener": [],
+    "ViewEventListener": [],
+}
 
 view_event_listener_excluded_callbacks: Set[str] = {
     "on_clone",
@@ -152,7 +166,6 @@ text_change_listeners: Dict[int, List[TextChangeListener]] = {}
 
 profile: Dict[str, Dict[str, Any]] = {}
 
-
 def add_profiling(event_handler: T_AnyCallable) -> T_AnyCallable:
     """
     Decorator to measure blocking event handler methods. Also prevents
@@ -166,7 +179,6 @@ def add_profiling(event_handler: T_AnyCallable) -> T_AnyCallable:
     """
     ...
 
-
 def trap_exceptions(event_handler: T_AnyCallable) -> T_AnyCallable:
     """
     Decorator to prevent exceptions from interrupting other events handlers.
@@ -178,7 +190,6 @@ def trap_exceptions(event_handler: T_AnyCallable) -> T_AnyCallable:
         The decorated method
     """
     ...
-
 
 def decorate_handler(cls: Type, method_name: str) -> None:
     """
@@ -193,120 +204,51 @@ def decorate_handler(cls: Type, method_name: str) -> None:
     """
     ...
 
-
-def unload_module(module: ModuleType) -> None:
-    ...
-
-
-def unload_plugin(modulename: str) -> None:
-    ...
-
-
-def reload_plugin(modulename: str) -> None:
-    ...
-
-
-def load_module(m: ModuleType) -> None:
-    ...
-
-
-def synthesize_on_activated_async() -> None:
-    ...
-
-
-def _instantiation_error(cls: Type, e: Exception) -> None:
-    ...
-
-
-def notify_application_commands() -> None:
-    ...
-
-
-def create_application_commands() -> List[Tuple[ApplicationCommand, str]]:
-    ...
-
-
-def create_window_commands(window_id: int) -> List[Tuple[WindowCommand, str]]:
-    ...
-
-
-def create_text_commands(view_id: int) -> List[Tuple[TextCommand, str]]:
-    ...
-
-
-def on_api_ready() -> None:
-    ...
-
-
-def is_view_event_listener_applicable(cls: Type[ViewEventListener], view: sublime.View) -> bool:
-    ...
-
-
-def create_view_event_listeners(classes: Iterable[Type[ViewEventListener]], view: sublime.View) -> None:
-    ...
-
-
-def check_view_event_listeners(view: sublime.View) -> None:
-    ...
-
-
-def attach_view(view: sublime.View) -> None:
-    ...
-
+def unload_module(module: ModuleType) -> None: ...
+def unload_plugin(modulename: str) -> None: ...
+def reload_plugin(modulename: str) -> None: ...
+def load_module(m: ModuleType) -> None: ...
+def synthesize_on_activated_async() -> None: ...
+def _instantiation_error(cls: Type, e: Exception) -> None: ...
+def notify_application_commands() -> None: ...
+def create_application_commands() -> List[Tuple[ApplicationCommand, str]]: ...
+def create_window_commands(window_id: int) -> List[Tuple[WindowCommand, str]]: ...
+def create_text_commands(view_id: int) -> List[Tuple[TextCommand, str]]: ...
+def on_api_ready() -> None: ...
+def is_view_event_listener_applicable(
+    cls: Type[ViewEventListener], view: sublime.View
+) -> bool: ...
+def create_view_event_listeners(
+    classes: Iterable[Type[ViewEventListener]], view: sublime.View
+) -> None: ...
+def check_view_event_listeners(view: sublime.View) -> None: ...
+def attach_view(view: sublime.View) -> None: ...
 
 check_all_view_event_listeners_scheduled: bool = False
 
-
-def check_all_view_event_listeners() -> None:
-    ...
-
-
-def detach_view(view: sublime.View) -> None:
-    ...
-
-
+def check_all_view_event_listeners() -> None: ...
+def detach_view(view: sublime.View) -> None: ...
 def find_view_event_listener(view: sublime.View, cls: Type) -> None | ViewEventListener:
     """Find the view event listener object, whose class is `cls`, for the `view`."""
     ...
 
-
-def attach_buffer(buf: sublime.Buffer) -> None:
-    ...
-
-
-def check_text_change_listeners(buf: sublime.Buffer) -> None:
-    ...
-
-
-def detach_buffer(buf: sublime.Buffer) -> None:
-    ...
-
-
-def plugin_module_for_obj(obj: object) -> str:
-    ...
-
-
-def el_callbacks(name: str, listener_only: bool = False) -> Generator[Type | str, None, None]:
-    ...
-
-
-def vel_callbacks(v: sublime.View, name: str, listener_only: bool = False) -> Generator[Type | str, None, None]:
-    ...
-
-
+def attach_buffer(buf: sublime.Buffer) -> None: ...
+def check_text_change_listeners(buf: sublime.Buffer) -> None: ...
+def detach_buffer(buf: sublime.Buffer) -> None: ...
+def plugin_module_for_obj(obj: object) -> str: ...
+def el_callbacks(
+    name: str, listener_only: bool = False
+) -> Generator[Type | str, None, None]: ...
+def vel_callbacks(
+    v: sublime.View, name: str, listener_only: bool = False
+) -> Generator[Type | str, None, None]: ...
 def run_view_callbacks(
     name: str,
     view_id: int,
     *args: Any,
     el_only: bool = False,
-) -> None:
-    ...
-
-
-def run_window_callbacks(name: str, window_id: int, *args: Any) -> None:
-    ...
-
-
+) -> None: ...
+def run_window_callbacks(name: str, window_id: int, *args: Any) -> None: ...
 def on_init(module: str) -> None:
     """
     Trigger the on_init() methods on EventListener and ViewEventListener
@@ -319,168 +261,59 @@ def on_init(module: str) -> None:
     """
     ...
 
-
-def on_new(view_id: int) -> None:
-    ...
-
-
-def on_new_async(view_id: int) -> None:
-    ...
-
-
-def on_new_buffer(buffer_id: int) -> None:
-    ...
-
-
-def on_new_buffer_async(buffer_id: int) -> None:
-    ...
-
-
-def on_associate_buffer(buffer_id: int) -> None:
-    ...
-
-
-def on_associate_buffer_async(buffer_id: int) -> None:
-    ...
-
-
-def on_close_buffer(buffer_id: int) -> None:
-    ...
-
-
-def on_close_buffer_async(buffer_id: int) -> None:
-    ...
-
-
-def on_clone(view_id: int) -> None:
-    ...
-
-
-def on_clone_async(view_id: int) -> None:
-    ...
-
+def on_new(view_id: int) -> None: ...
+def on_new_async(view_id: int) -> None: ...
+def on_new_buffer(buffer_id: int) -> None: ...
+def on_new_buffer_async(buffer_id: int) -> None: ...
+def on_associate_buffer(buffer_id: int) -> None: ...
+def on_associate_buffer_async(buffer_id: int) -> None: ...
+def on_close_buffer(buffer_id: int) -> None: ...
+def on_close_buffer_async(buffer_id: int) -> None: ...
+def on_clone(view_id: int) -> None: ...
+def on_clone_async(view_id: int) -> None: ...
 
 class Summary:
     max: float
     sum: float
     count: int
 
-    def __init__(self) -> None:
-        ...
+    def __init__(self) -> None: ...
+    def record(self, x: float) -> None: ...
 
-    def record(self, x: float) -> None:
-        ...
-
-
-def get_profiling_data() -> List[Tuple[str, str, int, float, float]]:
-    ...
-
-
-def on_load(view_id: int) -> None:
-    ...
-
-
-def on_load_async(view_id: int) -> None:
-    ...
-
-
-def on_revert(view_id: int) -> None:
-    ...
-
-
-def on_revert_async(view_id: int) -> None:
-    ...
-
-
-def on_reload(view_id: int) -> None:
-    ...
-
-
-def on_reload_async(view_id: int) -> None:
-    ...
-
-
-def on_pre_close(view_id: int) -> None:
-    ...
-
-
-def on_close(view_id: int) -> None:
-    ...
-
-
-def on_pre_save(view_id: int) -> None:
-    ...
-
-
-def on_pre_save_async(view_id: int) -> None:
-    ...
-
-
-def on_post_save(view_id: int) -> None:
-    ...
-
-
-def on_post_save_async(view_id: int) -> None:
-    ...
-
-
-def on_pre_move(view_id: int) -> None:
-    ...
-
-
-def on_post_move(view_id: int) -> None:
-    ...
-
-
-def on_post_move_async(view_id: int) -> None:
-    ...
-
-
-def on_modified(view_id: int) -> None:
-    ...
-
-
-def on_modified_async(view_id: int) -> None:
-    ...
-
-
-def on_selection_modified(view_id: int) -> None:
-    ...
-
-
-def on_selection_modified_async(view_id: int) -> None:
-    ...
-
-
-def on_activated(view_id: int) -> None:
-    ...
-
-
-def on_activated_async(view_id: int) -> None:
-    ...
-
-
-def on_deactivated(view_id: int) -> None:
-    ...
-
-
-def on_deactivated_async(view_id: int) -> None:
-    ...
-
-
+def get_profiling_data() -> List[Tuple[str, str, int, float, float]]: ...
+def on_load(view_id: int) -> None: ...
+def on_load_async(view_id: int) -> None: ...
+def on_revert(view_id: int) -> None: ...
+def on_revert_async(view_id: int) -> None: ...
+def on_reload(view_id: int) -> None: ...
+def on_reload_async(view_id: int) -> None: ...
+def on_pre_close(view_id: int) -> None: ...
+def on_close(view_id: int) -> None: ...
+def on_pre_save(view_id: int) -> None: ...
+def on_pre_save_async(view_id: int) -> None: ...
+def on_post_save(view_id: int) -> None: ...
+def on_post_save_async(view_id: int) -> None: ...
+def on_pre_move(view_id: int) -> None: ...
+def on_post_move(view_id: int) -> None: ...
+def on_post_move_async(view_id: int) -> None: ...
+def on_modified(view_id: int) -> None: ...
+def on_modified_async(view_id: int) -> None: ...
+def on_selection_modified(view_id: int) -> None: ...
+def on_selection_modified_async(view_id: int) -> None: ...
+def on_activated(view_id: int) -> None: ...
+def on_activated_async(view_id: int) -> None: ...
+def on_deactivated(view_id: int) -> None: ...
+def on_deactivated_async(view_id: int) -> None: ...
 def on_query_context(
     view_id: int,
     key: str,
     operator: str,
     operand: Any,
     match_all: bool,
-) -> None | bool:
-    ...
-
-
-def normalise_completion(c: sublime.CompletionItem | str | Sequence[str]) -> CompletionNormalized:
-    ...
-
+) -> None | bool: ...
+def normalise_completion(
+    c: sublime.CompletionItem | str | Sequence[str],
+) -> CompletionNormalized: ...
 
 class MultiCompletionList:
     remaining_calls: int
@@ -489,101 +322,50 @@ class MultiCompletionList:
     completions: List[CompletionNormalized]
     flags: int
 
-    def __init__(self, num_completion_lists: int, view_id: int, req_id: int) -> None:
-        ...
-
+    def __init__(
+        self, num_completion_lists: int, view_id: int, req_id: int
+    ) -> None: ...
     def completions_ready(
         self,
         completions: Iterable[sublime.CompletionItem | str | Sequence[str]],
         flags: int,
-    ) -> None:
-        ...
-
+    ) -> None: ...
 
 def on_query_completions(
     view_id: int,
     req_id: int,
     prefix: str,
     locations: Sequence[Point],
-) -> None | List[Completion] | Tuple[List[Completion], int]:
-    ...
-
-
-def on_hover(view_id: int, point: Point, hover_zone: int) -> None:
-    ...
-
-
+) -> None | List[Completion] | Tuple[List[Completion], int]: ...
+def on_hover(view_id: int, point: Point, hover_zone: int) -> None: ...
 def on_text_command(
     view_id: int,
     name: str,
     args: None | Dict[str, Any],
-) -> None | Tuple[str, None | Dict[str, Any]]:
-    ...
-
-
+) -> None | Tuple[str, None | Dict[str, Any]]: ...
 def on_window_command(
     window_id: int,
     name: str,
     args: None | Dict[str, Any],
-) -> None | Tuple[str, None | Dict[str, Any]]:
-    ...
-
-
-def on_post_text_command(view_id: int, name: str, args: None | Dict[str, Any]) -> None:
-    ...
-
-
-def on_post_window_command(window_id: int, name: str, args: None | Dict[str, Any]) -> None:
-    ...
-
-
-def on_new_project(window_id: int) -> None:
-    ...
-
-
-def on_new_project_async(window_id: int) -> None:
-    ...
-
-
-def on_load_project(window_id: int) -> None:
-    ...
-
-
-def on_load_project_async(window_id: int) -> None:
-    ...
-
-
-def on_pre_save_project(window_id: int) -> None:
-    ...
-
-
-def on_post_save_project(window_id: int) -> None:
-    ...
-
-
-def on_post_save_project_async(window_id: int) -> None:
-    ...
-
-
-def on_pre_close_project(window_id: int) -> None:
-    ...
-
-
-def on_new_window(window_id: int) -> None:
-    ...
-
-
-def on_new_window_async(window_id: int) -> None:
-    ...
-
-
-def on_pre_close_window(window_id: int) -> None:
-    ...
-
-
-def on_exit(log_path: str) -> None:
-    ...
-
+) -> None | Tuple[str, None | Dict[str, Any]]: ...
+def on_post_text_command(
+    view_id: int, name: str, args: None | Dict[str, Any]
+) -> None: ...
+def on_post_window_command(
+    window_id: int, name: str, args: None | Dict[str, Any]
+) -> None: ...
+def on_new_project(window_id: int) -> None: ...
+def on_new_project_async(window_id: int) -> None: ...
+def on_load_project(window_id: int) -> None: ...
+def on_load_project_async(window_id: int) -> None: ...
+def on_pre_save_project(window_id: int) -> None: ...
+def on_post_save_project(window_id: int) -> None: ...
+def on_post_save_project_async(window_id: int) -> None: ...
+def on_pre_close_project(window_id: int) -> None: ...
+def on_new_window(window_id: int) -> None: ...
+def on_new_window_async(window_id: int) -> None: ...
+def on_pre_close_window(window_id: int) -> None: ...
+def on_exit(log_path: str) -> None: ...
 
 class CommandInputHandler(Generic[T_InputType]):
     def name(self) -> str:
@@ -615,7 +397,12 @@ class CommandInputHandler(Generic[T_InputType]):
 
     def initial_selection(
         self,
-    ) -> List[Tuple[List[str | Tuple[str, T_InputType] | sublime.ListInputItem[T_InputType]], int]]:
+    ) -> List[
+        Tuple[
+            List[str | Tuple[str, T_InputType] | sublime.ListInputItem[T_InputType]],
+            int,
+        ]
+    ]:
         """A list of 2-element tuplues, defining the initially selected parts of the initial text."""
         ...
 
@@ -647,30 +434,19 @@ class CommandInputHandler(Generic[T_InputType]):
         """Called when the input is accepted, after the user has pressed enter and the text has been validated."""
         ...
 
-    def create_input_handler_(self, args: Dict[str, Any]) -> None | CommandInputHandler[T_InputType]:
-        ...
-
-    def preview_(self, v: str) -> Tuple[str, int]:
-        ...
-
-    def validate_(self, v: str) -> bool:
-        ...
-
-    def cancel_(self) -> None:
-        ...
-
-    def confirm_(self, v: str) -> None:
-        ...
-
-    def want_event(self) -> bool:
-        ...
-
+    def create_input_handler_(
+        self, args: Dict[str, Any]
+    ) -> None | CommandInputHandler[T_InputType]: ...
+    def preview_(self, v: str) -> Tuple[str, int]: ...
+    def validate_(self, v: str) -> bool: ...
+    def cancel_(self) -> None: ...
+    def confirm_(self, v: str) -> None: ...
+    def want_event(self) -> bool: ...
 
 class BackInputHandler(CommandInputHandler[None]):
     def name(self) -> str:
         """The command argument name this input handler is editing. Defaults to `_Back`."""
         ...
-
 
 class TextInputHandler(CommandInputHandler[str]):
     """
@@ -685,12 +461,8 @@ class TextInputHandler(CommandInputHandler[str]):
         """
         ...
 
-    def setup_(self, args: Dict[Any, Any]) -> Tuple[List[Any], Dict[str, str]]:
-        ...
-
-    def description_(self, v: str, text: str) -> str:
-        ...
-
+    def setup_(self, args: Dict[Any, Any]) -> Tuple[List[Any], Dict[str, str]]: ...
+    def description_(self, v: str, text: str) -> str: ...
 
 class ListInputHandler(CommandInputHandler[T_InputType], Generic[T_InputType]):
     """
@@ -702,7 +474,10 @@ class ListInputHandler(CommandInputHandler[T_InputType], Generic[T_InputType]):
         self,
     ) -> (
         List[str | Tuple[str, T_InputType] | sublime.ListInputItem[T_InputType]]
-        | Tuple[List[str | Tuple[str, T_InputType] | sublime.ListInputItem[T_InputType]], int]
+        | Tuple[
+            List[str | Tuple[str, T_InputType] | sublime.ListInputItem[T_InputType]],
+            int,
+        ]
     ):
         """
         The items to show in the list. If returning a list of `(str, value)` tuples,
@@ -719,12 +494,10 @@ class ListInputHandler(CommandInputHandler[T_InputType], Generic[T_InputType]):
         """
         ...
 
-    def setup_(self, args: Dict[Any, Any]) -> Tuple[List[Tuple[Any, ...]], Dict[str, str]]:
-        ...
-
-    def description_(self, v: str, text: str) -> str:
-        ...
-
+    def setup_(
+        self, args: Dict[Any, Any]
+    ) -> Tuple[List[Tuple[Any, ...]], Dict[str, str]]: ...
+    def description_(self, v: str, text: str) -> str: ...
 
 class Command:
     def name(self) -> str:
@@ -734,9 +507,7 @@ class Command:
         """
         ...
 
-    def is_enabled_(self, args: Dict[str, Any]) -> bool:
-        ...
-
+    def is_enabled_(self, args: Dict[str, Any]) -> bool: ...
     def is_enabled(self) -> bool:
         """
         Returns True if the command is able to be run at this time.
@@ -744,9 +515,7 @@ class Command:
         """
         ...
 
-    def is_visible_(self, args: Dict[str, Any]) -> bool:
-        ...
-
+    def is_visible_(self, args: Dict[str, Any]) -> bool: ...
     def is_visible(self) -> bool:
         """
         Returns True if the command should be shown in the menu at this time.
@@ -754,9 +523,7 @@ class Command:
         """
         ...
 
-    def is_checked_(self, args: Dict[str, Any]) -> bool:
-        ...
-
+    def is_checked_(self, args: Dict[str, Any]) -> bool: ...
     def is_checked(self) -> bool:
         """
         Returns True if a checkbox should be shown next to the menu item.
@@ -764,9 +531,7 @@ class Command:
         """
         ...
 
-    def description_(self, args: Dict[str, Any]) -> str:
-        ...
-
+    def description_(self, args: Dict[str, Any]) -> str: ...
     def description(self) -> str:
         """
         Returns a description of the command with the given arguments.
@@ -801,50 +566,39 @@ class Command:
         """
         ...
 
-    def create_input_handler_(self, args: Dict[str, Any]) -> None | CommandInputHandler[InputType]:
-        ...
-
+    def create_input_handler_(
+        self, args: Dict[str, Any]
+    ) -> None | CommandInputHandler[InputType]: ...
 
 class ApplicationCommand(Command):
     """ApplicationCommands are instantiated once per application."""
 
-    def run_(self, edit_token: int, args: Dict[str, Any]) -> None:
-        ...
+    def run_(self, edit_token: int, args: Dict[str, Any]) -> None: ...
 
     run: AnyCallable
-
 
 class WindowCommand(Command):
     """WindowCommands are instantiated once per window. The Window object may be retrieved via `self.window`"""
 
     window: sublime.Window
 
-    def __init__(self, window: sublime.Window) -> None:
-        ...
-
-    def run_(self, edit_token: int, args: Dict[str, Any]) -> None:
-        ...
+    def __init__(self, window: sublime.Window) -> None: ...
+    def run_(self, edit_token: int, args: Dict[str, Any]) -> None: ...
 
     run: AnyCallable
-
 
 class TextCommand(Command):
     """TextCommands are instantiated once per view. The View object may be retrieved via `self.view`"""
 
     view: sublime.View
 
-    def __init__(self, view: sublime.View) -> None:
-        ...
-
-    def run_(self, edit_token: int, args: Dict[str, Any]) -> None:
-        ...
+    def __init__(self, view: sublime.View) -> None: ...
+    def run_(self, edit_token: int, args: Dict[str, Any]) -> None: ...
 
     run: AnyCallable
 
-
 class EventListener:
     pass
-
 
 class ViewEventListener:
     """
@@ -873,9 +627,7 @@ class ViewEventListener:
         """
         ...
 
-    def __init__(self, view: sublime.View) -> None:
-        ...
-
+    def __init__(self, view: sublime.View) -> None: ...
 
 class TextChangeListener:
     """
@@ -924,9 +676,7 @@ class TextChangeListener:
         """
         ...
 
-    def __init__(self) -> None:
-        ...
-
+    def __init__(self) -> None: ...
     def detach(self) -> None:
         """
         Remove this listener from the buffer.
@@ -946,13 +696,10 @@ class TextChangeListener:
         """
         ...
 
-
 class MultizipImporter(importlib.abc.MetaPathFinder):
     loaders: List[importlib.abc.Loader]
 
-    def __init__(self) -> None:
-        ...
-
+    def __init__(self) -> None: ...
     def _make_spec(self, loader: importlib.abc.Loader, fullname: str) -> ModuleSpec:
         """
         :param loader:
@@ -987,7 +734,6 @@ class MultizipImporter(importlib.abc.MetaPathFinder):
             An importlib.machinery.ModuleSpec() object
         """
         ...
-
 
 class ZipResourceReader(importlib.abc.ResourceReader):
     """
@@ -1048,7 +794,6 @@ class ZipResourceReader(importlib.abc.ResourceReader):
             A list of the resources for this module
         """
         ...
-
 
 class ZipLoader(importlib.abc.InspectLoader):
     """
@@ -1201,14 +946,8 @@ class ZipLoader(importlib.abc.InspectLoader):
         """
         ...
 
-
 override_path: None | str = None
 multi_importer: MultizipImporter = MultizipImporter()
 
-
-def update_compressed_packages(pkgs: Iterable[str]) -> None:
-    ...
-
-
-def set_override_path(path: str) -> None:
-    ...
+def update_compressed_packages(pkgs: Iterable[str]) -> None: ...
+def set_override_path(path: str) -> None: ...

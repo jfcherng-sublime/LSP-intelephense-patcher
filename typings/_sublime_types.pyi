@@ -2,7 +2,18 @@
 
 from __future__ import annotations
 
-from typing import Any, Callable, Dict, Iterable, List, Protocol, Sequence, Tuple, TypedDict, TypeVar
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    List,
+    Protocol,
+    Sequence,
+    Tuple,
+    TypedDict,
+    TypeVar,
+)
 
 import sublime
 
@@ -19,7 +30,14 @@ Callback1 = Callable[[T], Any]
 T_AnyCallable = TypeVar("T_AnyCallable", bound=AnyCallable)
 T_ExpandableVar = TypeVar(
     "T_ExpandableVar",
-    bound=None | bool | int | float | str | Dict[Any, Any] | List[Any] | Tuple[Any, ...],
+    bound=None
+    | bool
+    | int
+    | float
+    | str
+    | Dict[Any, Any]
+    | List[Any]
+    | Tuple[Any, ...],
 )
 
 Point = int
@@ -43,18 +61,15 @@ CompletionNormalized = Tuple[
 Location = Tuple[str, str, Tuple[int, int]]
 Vector = Tuple[Dip, Dip]
 
-
 class Layout(TypedDict):
     cols: List[float]
     rows: List[float]
     cells: List[List[int]]
 
-
 class EventDict(TypedDict):
     x: float
     y: float
     modifier_keys: EventModifierKeysDict
-
 
 class EventModifierKeysDict(TypedDict, total=False):
     primary: bool
@@ -63,7 +78,6 @@ class EventModifierKeysDict(TypedDict, total=False):
     altgr: bool
     shift: bool
     super: bool
-
 
 class ExtractVariablesDict(TypedDict):
     file: str
@@ -80,7 +94,6 @@ class ExtractVariablesDict(TypedDict):
     project_name: str
     project_path: str
 
-
 class ScopeStyleDict(TypedDict, total=False):
     foreground: str
     background: str
@@ -94,12 +107,9 @@ class ScopeStyleDict(TypedDict, total=False):
     source_column: int
     source_file: str
 
-
 class CommandArgsDict(TypedDict):
     command: str
     args: None | Dict[str, Any]
 
-
 class HasKeysMethod(Protocol):
-    def keys(self) -> Iterable[str]:
-        ...
+    def keys(self) -> Iterable[str]: ...

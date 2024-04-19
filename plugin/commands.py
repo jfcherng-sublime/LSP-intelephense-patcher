@@ -1,33 +1,41 @@
+from __future__ import annotations
+
 import importlib
 import os
+from collections.abc import Callable
 from types import ModuleType
-from typing import Any, Callable, Dict, List, Tuple, cast
+from typing import Any, Dict, Tuple, cast
 
 import sublime
 import sublime_plugin
 from lsp_utils import ServerNpmResource
 
-from .patcher import AlreadyPatchedException, Patcher, PatcherUnsupportedException, json_dumps, restore_directory
+from .patcher import (
+    AlreadyPatchedException,
+    Patcher,
+    PatcherUnsupportedException,
+    json_dumps,
+    restore_directory,
+)
 from .plugin_message import console_msg, error_box, info_box
 from .utils import get_command_name
 
 
 def restart_intelephense_server() -> None:
-    view = sublime.active_window().active_view()
-    if view:
+    if view := sublime.active_window().active_view():
         view.run_command("lsp_restart_server", {"config_name": "LSP-intelephense"})
 
 
 def st_command_run_precheck(func: Callable) -> Callable:
     def wrapped(self: sublime_plugin.Command, *args, **kwargs) -> None:
-        def checker() -> Tuple[ModuleType, ServerNpmResource]:
+        def checker() -> tuple[ModuleType, ServerNpmResource]:
             try:
                 plugin_module = importlib.import_module("LSP-intelephense.plugin")
                 lsp_plugin = plugin_module.LspIntelephensePlugin  # type: ignore
             except (ImportError, AttributeError):
                 raise RuntimeError("LSP-intelephense is not installed...")
 
-            server_resource = lsp_plugin.get_server()  # type: ServerNpmResource
+            server_resource: ServerNpmResource = lsp_plugin.get_server()
 
             if not os.path.isfile(server_resource.binary_path):
                 raise RuntimeError(
@@ -62,9 +70,12 @@ class LspIntelephensePatcherPatchCommand(sublime_plugin.ApplicationCommand):
 
         try:
             is_success, occurrences = Patcher.patch_file(binary_path, allow_unsupported)
-
             if is_success and occurrences > 0:
-                info_box('[{_}] "{}" is patched with {} occurrences!', binary_path, occurrences)
+                info_box(
+                    '[{_}] "{}" is patched with {} occurrences!',
+                    binary_path,
+                    occurrences,
+                )
             else:
                 error_box("[{_}] Unfortunately, somehow the patching failed.")
         except AlreadyPatchedException:
@@ -133,14 +144,22 @@ class LspIntelephensePatcherOpenServerBinaryDirCommand(sublime_plugin.WindowComm
 
 
 class LspIntelephensePatcherShowMenuCommand(sublime_plugin.WindowCommand):
-    menu_items = [
+    menu_items: list[tuple[str, type, dict[str, Any]]] = [
         # title, cmd_class, cmd_arg
         ("Patch Intelephense", LspIntelephensePatcherPatchCommand, {}),
-        ("Patch Intelephense (Allow Unsupported)", LspIntelephensePatcherPatchCommand, {"allow_unsupported": True}),
+        (
+            "Patch Intelephense (Allow Unsupported)",
+            LspIntelephensePatcherPatchCommand,
+            {"allow_unsupported": True},
+        ),
         ("Un-patch Intelephense", LspIntelephensePatcherUnpatchCommand, {}),
         ("Re-patch Intelephense", LspIntelephensePatcherRepatchCommand, {}),
-        ("Open Server Binary Directory", LspIntelephensePatcherOpenServerBinaryDirCommand, {}),
-    ]  # type: List[Tuple[str, type, Dict[str, Any]]]
+        (
+            "Open Server Binary Directory",
+            LspIntelephensePatcherOpenServerBinaryDirCommand,
+            {},
+        ),
+    ]
 
     def run(self) -> None:
         titles, cmd_classes, cmd_args = cast(
